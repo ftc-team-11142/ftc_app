@@ -9,13 +9,9 @@ public class LiftControl extends ControlModule{
 
     private Lift lift;
     private ControllerMap.AxisEntry ax_lift_right_y;
-    private ControllerMap.ButtonEntry dpad_left;
-    private ControllerMap.ButtonEntry dpad_right;
-    private ControllerMap.ButtonEntry dpad_up;
-    private ControllerMap.ButtonEntry dpad_down;
-
-    private double rot_pos = 0;
-    private double apl_pos = 0;
+    private ControllerMap.ButtonEntry tray_up;
+    private ControllerMap.ButtonEntry tray_down;
+    private ControllerMap.ButtonEntry air_plane_launcher;
 
     public LiftControl(String name) {
         super(name);
@@ -26,32 +22,26 @@ public class LiftControl extends ControlModule{
         this.lift = robot.lift;
         ax_lift_right_y = controllerMap.getAxisMap("lift:right_y", "gamepad2", "right_stick_y");
 
-        dpad_left = controllerMap.getButtonMap("intake:dpad_left", "gamepad1","dpad_left");
-        dpad_right = controllerMap.getButtonMap("intake:dpad_right", "gamepad1","dpad_right");
-        dpad_up = controllerMap.getButtonMap("intake:dpad_up", "gamepad1","dpad_up");
-        dpad_down = controllerMap.getButtonMap("intake:dpad_down", "gamepad1","dpad_down");
+        tray_up = controllerMap.getButtonMap("lift:dpad_left", "gamepad1","y");
+        tray_down = controllerMap.getButtonMap("lift:dpad_right", "gamepad1","a");
+        air_plane_launcher = controllerMap.getButtonMap("lift:air_plane_launcher", "gamepad2","y");
     }
 
     @Override
     public void update(Telemetry telemetry) {
 
-        lift.setPower(ax_lift_right_y.get());
+        lift.setPower(ax_lift_right_y.get()*0.5);
 
-        if (dpad_left.get()) {
-            rot_pos -= 0.1;
+        if (tray_up.get()) {
+            lift.setTrayPosition(0.15);
         }
-        if (dpad_right.get()) {
-            rot_pos += 0.1;
-        }
-
-        if (dpad_down.get()) {
-            apl_pos -= 0.1;
-        }
-        if (dpad_up.get()) {
-            apl_pos += 0.1;
+        if (tray_down.get()) {
+            lift.setTrayPosition(0.5);
         }
 
-        lift.setAPLPosition(apl_pos);
-        lift.setTrayPosition(rot_pos);
+        if (air_plane_launcher.get()) {
+            lift.setAPLPosition(-0.5);
+        }
+
     }
 }

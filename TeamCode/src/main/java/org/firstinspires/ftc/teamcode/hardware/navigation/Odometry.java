@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.hardware.motors.Motor.Encoder;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Odometry {
@@ -19,10 +20,10 @@ public class Odometry {
     private final Encoder right_odometer;
     private final Encoder center_odometer;
 
-    private final double TRACKWIDTH = 9.00;
-    private final double CENTER_WHEEL_OFFSET = -6.089;
-    private final double WHEEL_DIAMETER = 1.37795;
-    private final double TICKS_PER_REV = 8192;
+    private final double TRACKWIDTH = 12.5;
+    private final double CENTER_WHEEL_OFFSET = 1.5;
+    private final double WHEEL_DIAMETER = 1.88976;
+    private final double TICKS_PER_REV = 2000;
     private final double DISTANCE_PER_PULSE = Math.PI * WHEEL_DIAMETER / TICKS_PER_REV;
 
     public Odometry(MotorEx front_left, MotorEx front_right, MotorEx back_left, MotorEx back_right) {
@@ -31,11 +32,11 @@ public class Odometry {
         this.back_left = back_left;
         this.back_right = back_right;
 
-        left_odometer = back_left.encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
-        right_odometer = front_left.encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
+        left_odometer = front_left.encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
+        right_odometer = front_right.encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
         center_odometer = back_right.encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
 
-        left_odometer.setDirection(MotorEx.Direction.REVERSE);
+        right_odometer.setDirection(MotorEx.Direction.REVERSE);
 
         odometry = new HolonomicIMUOdometry(
                 left_odometer::getDistance,
@@ -48,6 +49,8 @@ public class Odometry {
 
         Pose2d start_pose = new Pose2d(0,0, new Rotation2d(Math.toRadians(0)));
         odometry.updatePose(start_pose);
+        front_left.motorEx.setDirection(DcMotorSimple.Direction.REVERSE);
+        back_left.motorEx.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void updatePose(double heading) {

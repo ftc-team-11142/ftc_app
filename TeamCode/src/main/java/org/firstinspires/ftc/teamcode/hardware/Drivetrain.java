@@ -33,11 +33,11 @@ public class Drivetrain {
     private boolean has_reached;
 
     public static double forward_kp = 0.061;
-    public static double forward_ki = 0.0225;
+    public static double forward_ki = 0.0275;
     public static double forward_kd = 0.010;
     public static double forward_a = 0.8;
     public static double strafe_kp = 0.071;
-    public static double strafe_ki = 0.0225;
+    public static double strafe_ki = 0.0300;
     public static double strafe_kd = 0.019;
     public static double strafe_a = 0.8;
     public static double turn_kp = 0.0075;
@@ -103,8 +103,8 @@ public class Drivetrain {
         parameters.gyroRange = BNO055IMU.GyroRange.DPS2000;
         imu.initialize(parameters);
 
-        front_right.setDirection(DcMotorSimple.Direction.REVERSE);
-        back_right.setDirection(DcMotorSimple.Direction.REVERSE);
+        front_left.setDirection(DcMotorSimple.Direction.REVERSE);
+        back_left.setDirection(DcMotorSimple.Direction.REVERSE);
 
         front_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         front_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -137,6 +137,13 @@ public class Drivetrain {
         back_left.setPower(((forward - strafe + (turn + turn_correct)) / denominator));
         back_right.setPower(((forward + strafe - (turn + turn_correct)) / denominator));
     }
+
+//    public void flipMove(double forward, double strafe, double turn, double turn_correct, double denominator) {
+//        back_right.setPower(((forward + strafe + (turn + turn_correct)) / denominator));
+//        back_left.setPower(((forward - strafe - (turn + turn_correct)) / denominator));
+//        front_right.setPower(((forward - strafe + (turn + turn_correct)) / denominator));
+//        front_left.setPower(((forward + strafe - (turn + turn_correct)) / denominator));
+//    }
 
     public void stop() {
         front_left.setPower(0);
@@ -228,6 +235,8 @@ public class Drivetrain {
             rot -= 360;
         }
 
+        rot %= 360;
+
         if (motionProfile) {
 //            turn_pid.setKp(cs_turn_kp);
 //            turn_pid.setKi(cs_turn_ki);
@@ -241,9 +250,9 @@ public class Drivetrain {
             feed_forward = 0;
         }
 
-        forward_power = forward_pid.getOutPut(forward,y,feed_forward);
-        strafe_power = strafe_pid.getOutPut(strafe,x,feed_forward);
-        turn_power = Range.clip((turn_pid.getOutPut(turn, rot, feed_forward)),-turn_clip,turn_clip);
+        forward_power = Range.clip(-forward_pid.getOutPut(forward,y,feed_forward),-0.5,0.5);
+        strafe_power = Range.clip(-strafe_pid.getOutPut(strafe,x,feed_forward),-0.5,0.5);
+        turn_power = Range.clip((turn_pid.getOutPut(turn, rot, feed_forward)),-0.5,0.5);
 
         botHeading = -1* Math.toRadians(heading);
 
@@ -265,27 +274,28 @@ public class Drivetrain {
         denominator = Math.max(Math.abs(forward_power) + Math.abs(strafe_power) + Math.abs(turn_power), 1);
 
         if (move) {
-            move(rotY, rotX, turn_power, (heading_delta * 0.001), denominator);
+            move(rotY, rotX, turn_power, (heading_delta * 0), denominator);
         }
 
         move = true;
 
         heading_was = heading;
 //
-//        telemetry.addData("F Power",forward_power);
-//        telemetry.addData("S Power",strafe_power);
-//        telemetry.addData("T Power",turn_power);
-//        telemetry.addData("F Current",y);
-//        telemetry.addData("S Current",x);
-//        telemetry.addData("T Current",rot);
+        telemetry.addData("odo", odo);
+        telemetry.addData("F Power", forward_power);
+        telemetry.addData("S Power",strafe_power);
+        telemetry.addData("T Power",turn_power);
+        telemetry.addData("F Current",y);
+        telemetry.addData("S Current",x);
+        telemetry.addData("T Current",rot);
 //        telemetry.addData("Forward kP",forward_kp);
 //        telemetry.addData("Strafe kP",strafe_kp);
 //        telemetry.addData("Turn kP",turn_kp);
 //        telemetry.addData("Turn Clip",turn_clip);
-//        telemetry.addData("Rotation",-odo.getRotation().getDegrees());
-//        telemetry.addData("RotY",rotY);
-//        telemetry.addData("RotX",rotX);hh
-//        telemetry.addData("Has Reached",has_reached);
+        telemetry.addData("Rotation",-odo.getRotation().getDegrees());
+        telemetry.addData("RotY",rotY);
+        telemetry.addData("RotX",rotX);
+        telemetry.addData("Has Reached",has_reached);
     }
 
 //    public double getForwardPosition() {

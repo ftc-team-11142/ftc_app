@@ -17,7 +17,6 @@ public class Lift {
         this.lift = lift;
         this.lift_servo = lift_servo;
         this.air_plane_launcher = air_plane_launcher;
-
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
@@ -28,6 +27,10 @@ public class Lift {
 
     public double getLiftPosition() {
         return lift.getCurrentPosition();
+    }
+
+    public void runToPosition(int pos) {
+        lift.setTargetPosition(-1170);
     }
 
     public void setPower(double pow) {

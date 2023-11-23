@@ -9,10 +9,8 @@ public class IntakeControl extends ControlModule{
 
     private Intake intake;
     private ControllerMap.AxisEntry right_trigger;
-    private ControllerMap.ButtonEntry dpad_left;
-    private ControllerMap.ButtonEntry dpad_right;
-
-    private double rot_pos = 0;
+    private ControllerMap.ButtonEntry x_button;
+    private ControllerMap.ButtonEntry b_button;
 
     public IntakeControl(String name) {
         super(name);
@@ -24,22 +22,21 @@ public class IntakeControl extends ControlModule{
         this.intake = robot.intake;
         right_trigger = controllerMap.getAxisMap("intake:right_trigger", "gamepad1","right_trigger");
 
-        dpad_left = controllerMap.getButtonMap("intake:dpad_left", "gamepad1","dpad_left");
-        dpad_right = controllerMap.getButtonMap("intake:dpad_right", "gamepad1","dpad_right");
-
+        x_button = controllerMap.getButtonMap("intake:x_button", "gamepad1","x");
+        b_button = controllerMap.getButtonMap("intake:b_button", "gamepad1","b");
+        intake.setRotatorPosition(0);
     }
 
     @Override
     public void update(Telemetry telemetry) {
         intake.setSpinnerPower(right_trigger.get());
 
-        if (dpad_left.get()) {
-            rot_pos -= 0.1;
-        }
-        if (dpad_right.get()) {
-            rot_pos += 0.1;
+        if (x_button.get()) {
+            intake.setRotatorPosition(0);
         }
 
-        intake.setRotatorPosition(rot_pos);
+        if (b_button.get()) {
+            intake.setRotatorPosition(0.5);
+        }
     }
 }

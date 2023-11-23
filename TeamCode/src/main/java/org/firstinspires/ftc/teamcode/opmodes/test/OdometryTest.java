@@ -23,10 +23,10 @@ import org.firstinspires.ftc.teamcode.opmodes.LoggingOpMode;
 @Autonomous(name="Odometry Test")
 public class OdometryTest extends LoggingOpMode {
 
-    public static double TRACKWIDTH = 9.00;
-    public final double CENTER_WHEEL_OFFSET = -6.089;
-    public final double WHEEL_DIAMETER = 1.37795;
-    public final double TICKS_PER_REV = 8192;
+    public static double TRACKWIDTH = 12.5;
+    public final double CENTER_WHEEL_OFFSET = 1.5;
+    public final double WHEEL_DIAMETER = 1.88976;
+    public final double TICKS_PER_REV = 2000;
     public final double DISTANCE_PER_PULSE = Math.PI * WHEEL_DIAMETER / TICKS_PER_REV;
 
     private int main_id = 0;
@@ -82,11 +82,12 @@ public class OdometryTest extends LoggingOpMode {
         back_left = backLeft.motorEx;
         back_right = backRight.motorEx;
 
-        leftOdometer = backLeft.encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
-        rightOdometer = frontLeft.encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
+        leftOdometer = frontLeft.encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
+        rightOdometer = frontRight.encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
         centerOdometer = backRight.encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
 
-        leftOdometer.setDirection(MotorEx.Direction.REVERSE);
+//        leftOdometer.setDirection(MotorEx.Direction.REVERSE);
+        rightOdometer.setDirection(MotorEx.Direction.REVERSE);
 
         odometry = new HolonomicIMUOdometry(
                 leftOdometer::getDistance,
@@ -102,8 +103,8 @@ public class OdometryTest extends LoggingOpMode {
         Pose2d start_pose = new Pose2d(0,0,new Rotation2d(Math.toRadians(0)));
         odometry.updatePose(start_pose);
 
-        front_right.setDirection(DcMotorSimple.Direction.REVERSE);
-        back_right.setDirection(DcMotorSimple.Direction.REVERSE);
+        front_left.setDirection(DcMotorSimple.Direction.REVERSE);
+        back_left.setDirection(DcMotorSimple.Direction.REVERSE);
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -117,6 +118,7 @@ public class OdometryTest extends LoggingOpMode {
 
     @Override
     public void loop() {
+
         odometry.updatePose(-imu.getAngularOrientation().firstAngle);
 
         double forward_power = gamepad1.left_stick_y;
@@ -159,6 +161,20 @@ public class OdometryTest extends LoggingOpMode {
 
         odometry_rotation %= 360;
 
+        double testrot = rot;
+        if (Math.abs(270 - testrot) > Math.abs(270 - (testrot-360))) {
+            testrot -= 360;
+        }
+
+        testrot %= 360;
+
+        double testodo = odometry_rotation;
+        if (Math.abs(270 - testodo) > Math.abs(270 - (testodo-360))) {
+            testodo -= 360;
+        }
+
+        testodo %= 360;
+
         rotatePoints(bxPoints, byPoints,-Math.toRadians(rot),x,y);
 
         TelemetryPacket packet = new TelemetryPacket();
@@ -177,6 +193,8 @@ public class OdometryTest extends LoggingOpMode {
         telemetry.addData("Left",leftOdometer.getPosition());
         telemetry.addData("Right",rightOdometer.getPosition());
         telemetry.addData("imu", rot);
+        telemetry.addData("testimu", testrot);
+        telemetry.addData("testodo", testodo);
         telemetry.addData("Trackwidth", TRACKWIDTH);
 
         telemetry.update();
