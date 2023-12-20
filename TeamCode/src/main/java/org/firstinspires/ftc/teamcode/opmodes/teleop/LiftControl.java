@@ -12,6 +12,7 @@ public class LiftControl extends ControlModule{
     private ControllerMap.ButtonEntry tray_up;
     private ControllerMap.ButtonEntry tray_down;
     private ControllerMap.ButtonEntry air_plane_launcher;
+    private ControllerMap.ButtonEntry air_plane_launcher_a;
 
     public LiftControl(String name) {
         super(name);
@@ -22,9 +23,10 @@ public class LiftControl extends ControlModule{
         this.lift = robot.lift;
         ax_lift_right_y = controllerMap.getAxisMap("lift:right_y", "gamepad2", "right_stick_y");
 
-        tray_up = controllerMap.getButtonMap("lift:dpad_left", "gamepad1","y");
-        tray_down = controllerMap.getButtonMap("lift:dpad_right", "gamepad1","a");
+        tray_up = controllerMap.getButtonMap("lift:tray_up", "gamepad1","y");
+        tray_down = controllerMap.getButtonMap("lift:tray_down", "gamepad1","a");
         air_plane_launcher = controllerMap.getButtonMap("lift:air_plane_launcher", "gamepad2","y");
+        air_plane_launcher_a = controllerMap.getButtonMap("lift:air_plane_launcher_a", "gamepad2","a");
     }
 
     @Override
@@ -33,13 +35,16 @@ public class LiftControl extends ControlModule{
         lift.setPower(ax_lift_right_y.get()*0.5);
 
         if (tray_up.get()) {
-            lift.setTrayPosition(0.15);
+            lift.setTrayPosition(0.684);
         }
         if (tray_down.get()) {
-            lift.setTrayPosition(0.5);
+            lift.setTrayPosition(0.404);
         }
 
         if (air_plane_launcher.get()) {
+            lift.setAPLPosition(0.5);
+        }
+        if(air_plane_launcher_a.get()) {
             lift.setAPLPosition(-0.5);
         }
 

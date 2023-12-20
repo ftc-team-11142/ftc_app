@@ -50,7 +50,7 @@ public class DriveControl extends ControlModule {
     private boolean angled_turn = false;
     private double turn_angle = 0;
 
-    public static double turn_kp = 0.007;
+    public static double turn_kp = 0.01; //was 0.007
     public static double turn_ki = 0.125;
     public static double turn_kd = 0.0028;
     public static double turn_a = 0.8;
@@ -122,21 +122,9 @@ public class DriveControl extends ControlModule {
             angled_turn = false;
         }
 
-
-
-
-
-//        ADJUSTHORIZ += ((ax_horizontal_left_x.get() * 110) / MAXEXTENDEDHORIZ);
-//        if (ADJUSTHORIZ > 1) ADJUSTHORIZ = 1;
-//        if (ADJUSTHORIZ < 0) ADJUSTHORIZ = 0;
-
         if (left_bumper.edge() == -1) {
             field_centric = !field_centric;
         }
-//
-//        if (guide.edge() == -1) {
-//            smooth = !smooth;
-//        }
 
         heading_delta = heading - heading_was;
 

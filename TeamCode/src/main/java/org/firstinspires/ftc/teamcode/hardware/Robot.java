@@ -21,6 +21,7 @@ public class Robot {
     public Odometry odometry;
     public Intake intake;
     public Lift lift;
+    public Hanger hanger;
     public IMU imu;
 
     public EventBus eventBus = new EventBus();
@@ -45,25 +46,27 @@ public class Robot {
     public Robot(HardwareMap hardwareMap)
     {
         // Motors
-        MotorEx front_left = new MotorEx(hardwareMap, "front left");
+        DcMotorEx front_left = hardwareMap.get(DcMotorEx.class, "front left");
         MotorEx front_right = new MotorEx(hardwareMap, "front right");
-        MotorEx back_left = new MotorEx(hardwareMap, "back left");
+        DcMotorEx back_left = hardwareMap.get(DcMotorEx.class, "back left");
         MotorEx back_right = new MotorEx(hardwareMap, "back right");
         DcMotorEx lift = hardwareMap.get(DcMotorEx.class, "lift");
+        DcMotorEx hanger_left = hardwareMap.get(DcMotorEx.class, "hanger left");
+        MotorEx hanger_right = new MotorEx(hardwareMap, "hanger right");
+        DcMotorEx intake_spinner = hardwareMap.get(DcMotorEx.class, "intake spinner");
 
         // Servos
-        CRServo intake_spinner = hardwareMap.get(CRServo.class, "intake spinner");
-        Servo intake_rotator = hardwareMap.get(Servo.class, "intake rotator");
-        Servo air_plane_launcher = hardwareMap.get(Servo.class, "air plane launcher");
+        CRServo air_plane_launcher = hardwareMap.get(CRServo.class, "air plane launcher");
         Servo lift_servo = hardwareMap.get(Servo.class, "lift servo");
 
         // Sensors
         BNO055IMU imu_sensor = hardwareMap.get(BNO055IMU.class, "imu");
 
         // Sub-Assemblies
-        this.drivetrain = new Drivetrain(front_left.motorEx, front_right.motorEx, back_left.motorEx, back_right.motorEx, imu_sensor);
-        this.intake = new Intake(intake_spinner, intake_rotator);
+        this.drivetrain = new Drivetrain(front_left, front_right.motorEx, back_left, back_right.motorEx, imu_sensor);
+        this.intake = new Intake(intake_spinner);
         this.lift = new Lift(lift, lift_servo ,air_plane_launcher);
-        this.odometry = new Odometry(front_left, front_right, back_left, back_right);
+        this.hanger = new Hanger(hanger_left, hanger_right.motorEx);
+        this.odometry = new Odometry(front_right, back_right, hanger_right, front_left,back_left);
     }
 }

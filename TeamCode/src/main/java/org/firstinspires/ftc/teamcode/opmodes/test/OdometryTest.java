@@ -31,7 +31,7 @@ public class OdometryTest extends LoggingOpMode {
 
     private int main_id = 0;
 
-    private MotorEx frontLeft, frontRight, backLeft, backRight;
+    private MotorEx frontLeft, frontRight, backLeft, backRight, hanger_right;
     private DcMotorEx front_left, front_right, back_left, back_right;
     private Encoder leftOdometer, rightOdometer, centerOdometer;
     private HolonomicIMUOdometry odometry;
@@ -76,18 +76,20 @@ public class OdometryTest extends LoggingOpMode {
         frontRight = new MotorEx(hardwareMap, "front right");
         backLeft = new MotorEx(hardwareMap, "back left");
         backRight = new MotorEx(hardwareMap, "back right");
+        hanger_right = new MotorEx(hardwareMap, "hanger right");
 
         front_left = frontLeft.motorEx;
         front_right = frontRight.motorEx;
         back_left = backLeft.motorEx;
         back_right = backRight.motorEx;
 
-        leftOdometer = frontLeft.encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
-        rightOdometer = frontRight.encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
+        leftOdometer = frontRight.encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
+        rightOdometer = hanger_right.encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
         centerOdometer = backRight.encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
 
 //        leftOdometer.setDirection(MotorEx.Direction.REVERSE);
-        rightOdometer.setDirection(MotorEx.Direction.REVERSE);
+//        rightOdometer.setDirection(MotorEx.Direction.REVERSE);
+//        centerOdometer.setDirection(MotorEx.Direction.REVERSE);
 
         odometry = new HolonomicIMUOdometry(
                 leftOdometer::getDistance,

@@ -11,9 +11,9 @@ public class Lift {
 
     private final DcMotorEx lift;
     private final Servo lift_servo;
-    private final Servo air_plane_launcher;
+    private final CRServo air_plane_launcher;
 
-    public Lift(DcMotorEx lift, Servo lift_servo, Servo air_plane_launcher) {
+    public Lift(DcMotorEx lift, Servo lift_servo, CRServo air_plane_launcher) {
         this.lift = lift;
         this.lift_servo = lift_servo;
         this.air_plane_launcher = air_plane_launcher;
@@ -46,10 +46,10 @@ public class Lift {
     }
 
     public void setAPLPosition(double pos) {
-        air_plane_launcher.setPosition(pos);
+        air_plane_launcher.setPower(pos);
     }
 
-    public double getAPLPosition() {
-        return air_plane_launcher.getPosition();
-    }
+//    public double getAPLPosition() {
+//        return air_plane_launcher.getPosition();
+//    }
 }
