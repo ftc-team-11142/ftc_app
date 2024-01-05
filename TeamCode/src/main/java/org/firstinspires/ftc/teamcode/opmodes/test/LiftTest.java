@@ -19,7 +19,7 @@ import java.io.Serializable;
 @TeleOp(name = "Lift Test")
 public class LiftTest extends LoggingOpMode {
 
-//    private DcMotorEx lift;
+    private DcMotorEx lift;
 //    private Servo lift_servo;
     private DcMotorEx intake_spinner;
     private DcMotorEx hanger_left;
@@ -28,12 +28,12 @@ public class LiftTest extends LoggingOpMode {
     @Override
     public void init() {
         super.init();
-//        Robot robot = Robot.initialize(hardwareMap);
-//        lift = hardwareMap.get(DcMotorEx.class, "lift");
+        Robot robot = Robot.initialize(hardwareMap);
+        lift = hardwareMap.get(DcMotorEx.class, "lift");
 //        lift_servo = hardwareMap.get(Servo.class, "lift servo");
-        intake_spinner = hardwareMap.get(DcMotorEx.class, "intake spinner");
-        hanger_left = hardwareMap.get(DcMotorEx.class, "hanger left");
-        hanger_right = hardwareMap.get(DcMotorEx.class, "hanger right");
+//        intake_spinner = hardwareMap.get(DcMotorEx.class, "intake spinner");
+//        hanger_left = hardwareMap.get(DcMotorEx.class, "hanger left");
+//        hanger_right = hardwareMap.get(DcMotorEx.class, "hanger right");
 
 //        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -53,12 +53,12 @@ public class LiftTest extends LoggingOpMode {
     @Override
     public void loop() {
 
-//        lift.setPower((-1170 - lift.getCurrentPosition()) * 0.05);
-        intake_spinner.setPower(-gamepad1.right_trigger);
-        hanger_left.setPower(-gamepad1.left_stick_y);
-        hanger_right.setPower(gamepad1.left_stick_y);
+        lift.setPower(gamepad1.left_stick_y);
+//        intake_spinner.setPower(-gamepad1.right_trigger);
+//        hanger_left.setPower(-gamepad1.left_stick_y);
+//        hanger_right.setPower(gamepad1.left_stick_y);
 
-//        telemetry.addData("Lift Encoder", lift.getCurrentPosition());
+        telemetry.addData("Lift Encoder", lift.getCurrentPosition());
 //        telemetry.addData("Lift Power", (-1170 - lift.getCurrentPosition()) * 0.00005);
         telemetry.addData("Loop Time: ", LoopTimer.getLoopTime());
         telemetry.update();

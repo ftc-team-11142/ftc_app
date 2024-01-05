@@ -68,7 +68,7 @@ public class CloseBlueAuto extends LoggingOpMode{
             @Override
             public void onOpened()
             {
-                camera.startStreaming(1280,960, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(640,480, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
@@ -115,33 +115,33 @@ public class CloseBlueAuto extends LoggingOpMode{
         if (result.equals("center")) {
             switch (main_id) {
                 case 0:
-                    drivetrain.autoMove(-31, 2, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(29.136, -2.57, 0, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
                 case 1:
-                    drivetrain.autoMove(-20, 2, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(24, -25, 0, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
                 case 2:
-                    lift_target = -1315;
-                    drivetrain.autoMove(-25, 20, 90, 1, 2, 2, odometryPose, telemetry);
+//                    lift_target = -1208;
+                    drivetrain.autoMove(23.58, -25, 270, 1, 2, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
                 case 3:
-                    lift.setTrayPosition(0.51);
-                    drivetrain.autoMove(-30.19, 44.29, 90, 0.5, 0.5, 2, odometryPose, telemetry);
+//                    lift.setTrayPosition(0.51);
+                    drivetrain.autoMove(23.58, -44.76, 270, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
                 case 4:
-                    lift.setTrayPosition(0.648);
+//                    lift.setTrayPosition(0.736);
                     break;
 
             }
@@ -149,78 +149,84 @@ public class CloseBlueAuto extends LoggingOpMode{
         if (result.equals("left")) {
             switch (main_id) {
                 case 0:
-                    drivetrain.autoMove(-21.914, 14.067572, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(21.19, -17.57, 0, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
                 case 1:
-                    drivetrain.autoMove(-13, 14.3, 0, 0.8, 0.8, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(18, -30, 0, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
                 case 2:
-                    lift_target = -1315;
-                    drivetrain.autoMove(-15, 20, 90, 0.5, 0.5, 2, odometryPose, telemetry);
+//                    lift_target = -1208;
+                    drivetrain.autoMove(23.58, -30, 270, 1, 2, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
                 case 3:
-                    lift.setTrayPosition(0.51);
-                    drivetrain.autoMove(-23.2177, 44.29, 90, 0.5, 0.5, 2, odometryPose, telemetry);
+//                    lift.setTrayPosition(0.51);
+                    drivetrain.autoMove(23.58, -44.76, 270, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
                 case 4:
-                    lift.setTrayPosition(0.648);
+//                    lift.setTrayPosition(0.736);
                     break;
             }
         }
         if (result.equals("right")) {
             switch (main_id) {
                 case 0:
-                    drivetrain.autoMove(-28.25, 5.387, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(24.51, -3.2, 0, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
                 case 1:
-                    drivetrain.autoMove(-32, 9.784, 90, 0.8, 0.8, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(24.77, 5, 270, 0.8, 0.8, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
                 case 2:
-                    drivetrain.autoMove(-31.7, 0.215, 90, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(24, -25, 270, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
                 case 3:
-                    lift_target = -1315;
-                    lift.setTrayPosition(0.51);
-                    drivetrain.autoMove(-36.942, 44.29, 90, 0.5, 0.5, 2, odometryPose, telemetry);
+//                    lift_target = -1208;
+                    drivetrain.autoMove(23.58, -25, 270, 1, 2, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
                 case 4:
-                    lift.setTrayPosition(0.648);
+//                    lift.setTrayPosition(0.51);
+                    drivetrain.autoMove(23.58, -44.76, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                    if (drivetrain.hasReached()) {
+                        main_id += 1;
+                    }
+                    break;
+                case 5:
+//                    lift.setTrayPosition(0.736);
                     break;
             }
         }
 
 
-        lift_power = (lift_target - lift.getLiftPosition()) * 0.03;
-        if (Math.abs(lift_target - lift.getLiftPosition()) > 20) {
-            lift.setPower(lift_power);
-        }
-        else {
-            lift.setPower(0);
-        }
+//        lift_power = (lift_target - lift.getLiftPosition()) * 0.03;
+//        if (Math.abs(lift_target - lift.getLiftPosition()) > 20) {
+////            lift.setPower(lift_power);
+//        }
+//        else {
+//            lift.setPower(0);
+//        }
 
         drivetrain.update(odometryPose, telemetry,false, main_id, false, false,0);
 

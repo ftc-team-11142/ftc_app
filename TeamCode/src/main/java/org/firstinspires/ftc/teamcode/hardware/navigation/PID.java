@@ -7,7 +7,6 @@ public class PID {
 //    private double position;
 //    private double target_position;
 //    private double error;
-
 //    private double reference;
     private double lastReference = 0;
     private double integralSum = 0;

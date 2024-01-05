@@ -71,7 +71,7 @@ public class FarBlueAuto extends LoggingOpMode{
             @Override
             public void onOpened()
             {
-                camera.startStreaming(1280,960, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(640,480, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
@@ -94,6 +94,7 @@ public class FarBlueAuto extends LoggingOpMode{
         result = pipeline.getLocation();
 
         telemetry.addData("Result", result);
+        telemetry.addData("color", pipeline.getColorValue());
         telemetry.update();
     }
 

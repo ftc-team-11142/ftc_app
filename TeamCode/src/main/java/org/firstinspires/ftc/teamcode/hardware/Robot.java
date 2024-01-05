@@ -67,6 +67,6 @@ public class Robot {
         this.intake = new Intake(intake_spinner);
         this.lift = new Lift(lift, lift_servo ,air_plane_launcher);
         this.hanger = new Hanger(hanger_left, hanger_right.motorEx);
-        this.odometry = new Odometry(front_right, back_right, hanger_right, front_left,back_left);
+        this.odometry = new Odometry(front_right, hanger_right, back_right, front_left,back_left);
     }
 }

@@ -51,9 +51,9 @@ public class Drivetrain {
     public static double cs_turn_ki = 0.09;
     public static double cs_strafe_kp = 0.063;
 
-    private final PID forward_pid = new PID(forward_kp,forward_ki,forward_kd,0.2,1,forward_a);
-    private final PID strafe_pid = new PID(strafe_kp,strafe_ki,strafe_kd,0.2,1,strafe_a);
-    private final PID turn_pid = new PID(turn_kp,turn_ki,turn_kd,0.2,turn_max_i_sum,turn_a);
+    private final PID forward_pid = new PID(forward_kp,forward_ki,forward_kd,0.25,1,forward_a);
+    private final PID strafe_pid = new PID(strafe_kp,strafe_ki,strafe_kd,0.3,1,strafe_a);
+    private final PID turn_pid = new PID(turn_kp,turn_ki,turn_kd,0.23,turn_max_i_sum,turn_a);
 
     public static double rise_slope = 0.1;
     public static double fall_slope = 0.00000000000000000000001;
@@ -136,6 +136,20 @@ public class Drivetrain {
         front_right.setPower(((forward - strafe - (turn + turn_correct)) / denominator));
         back_left.setPower(((forward - strafe + (turn + turn_correct)) / denominator));
         back_right.setPower(((forward + strafe - (turn + turn_correct)) / denominator));
+    }
+
+    public void reverseMove(double forward, double strafe, double turn, double turn_correct) {
+        front_left.setPower(-(forward + strafe + (turn + turn_correct)));
+        front_right.setPower(-(forward - strafe - (turn + turn_correct)));
+        back_left.setPower(-(forward - strafe + (turn + turn_correct)));
+        back_right.setPower(-(forward + strafe - (turn + turn_correct)));
+    }
+
+    public void reverseMove(double forward, double strafe, double turn, double turn_correct, double denominator) {
+        front_left.setPower(-((forward + strafe + (turn + turn_correct)) / denominator));
+        front_right.setPower(-((forward - strafe - (turn + turn_correct)) / denominator));
+        back_left.setPower(-((forward - strafe + (turn + turn_correct)) / denominator));
+        back_right.setPower(-((forward + strafe - (turn + turn_correct)) / denominator));
     }
 
 //    public void flipMove(double forward, double strafe, double turn, double turn_correct, double denominator) {

@@ -24,6 +24,7 @@ public class DriveControl extends ControlModule {
     private ControllerMap.ButtonEntry dpad_down;
     private ControllerMap.ButtonEntry dpad_left;
     private ControllerMap.ButtonEntry dpad_right;
+    private ControllerMap.ButtonEntry drive_direction;
 
     private double forward_speed = 1;
     private double strafe_speed = 1.1;
@@ -31,6 +32,7 @@ public class DriveControl extends ControlModule {
 
     private boolean field_centric = false;
     private boolean smooth = false;
+    private boolean direction_flip = false;
 
     private double heading_delta = 0;
     private double heading_was = 0;
@@ -85,7 +87,7 @@ public class DriveControl extends ControlModule {
         dpad_left = controllerMap.getButtonMap("drive:dpad_left", "gamepad1","dpad_left");
         dpad_right = controllerMap.getButtonMap("drive:dpad_right", "gamepad1","dpad_right");
 
-//        guide = controllerMap.getButtonMap("drive:guide", "gamepad1","guide");
+        drive_direction = controllerMap.getButtonMap("drive:drive_direction", "gamepad2","b");
 
     }
 
@@ -100,6 +102,10 @@ public class DriveControl extends ControlModule {
         drivetrain.updateHeading();
 
         double heading = drivetrain.getHeading();
+
+        if(drive_direction.edge() == -1) {
+            direction_flip = !direction_flip;
+        }
 
         if(dpad_up.edge() == -1) {
             turn_angle = 0;
@@ -203,15 +209,25 @@ public class DriveControl extends ControlModule {
 //            drivetrain.autoMove(forward,strafe,turn,0,0,0,odometryPose,telemetry);
 //            drivetrain.update(odometryPose, telemetry,false, 0, false, false, 0);
 //        }
-        if (field_centric) {
-            drivetrain.move(rotY, rotX, rx, (heading_delta * 0.001), denominator);
+        if (!direction_flip) {
+            if (field_centric) {
+                drivetrain.move(rotY, rotX, rx, (heading_delta * 0.001), denominator);
+            } else {
+                //drivetrain.move(Math.pow(Math.abs(y), 1.6) * Math.signum(y),Math.pow(Math.abs(x), 1.6) * Math.signum(x),Math.pow(Math.abs(rx), 1.6) * Math.signum(rx) * 0.6,(heading_delta * 0.001));
+                //drivetrain.move(Math.pow(Math.abs(y), 1.6) * Math.signum(y),Math.pow(Math.abs(x), 1.6) * Math.signum(x), ((target_heading - heading_unwrapped) * heading_p) + rx, 0);
+                drivetrain.move(y, x, rx, (heading_delta * 0.001));
+                //Math.pow(Math.abs(rx), 1.6) * Math.signum(rx) * 0.6
+            }
         }
         else {
-            //drivetrain.move(Math.pow(Math.abs(y), 1.6) * Math.signum(y),Math.pow(Math.abs(x), 1.6) * Math.signum(x),Math.pow(Math.abs(rx), 1.6) * Math.signum(rx) * 0.6,(heading_delta * 0.001));
-            //drivetrain.move(Math.pow(Math.abs(y), 1.6) * Math.signum(y),Math.pow(Math.abs(x), 1.6) * Math.signum(x), ((target_heading - heading_unwrapped) * heading_p) + rx, 0);
-            drivetrain.move(y, x, rx, (heading_delta * 0.001));
-            //Math.pow(Math.abs(rx), 1.6) * Math.signum(rx) * 0.6
-
+            if (field_centric) {
+                drivetrain.reverseMove(rotY, rotX, rx, (heading_delta * 0.001), denominator);
+            } else {
+                //drivetrain.move(Math.pow(Math.abs(y), 1.6) * Math.signum(y),Math.pow(Math.abs(x), 1.6) * Math.signum(x),Math.pow(Math.abs(rx), 1.6) * Math.signum(rx) * 0.6,(heading_delta * 0.001));
+                //drivetrain.move(Math.pow(Math.abs(y), 1.6) * Math.signum(y),Math.pow(Math.abs(x), 1.6) * Math.signum(x), ((target_heading - heading_unwrapped) * heading_p) + rx, 0);
+                drivetrain.reverseMove(y, x, rx, (heading_delta * 0.001));
+                //Math.pow(Math.abs(rx), 1.6) * Math.signum(rx) * 0.6
+            }
         }
 
         heading_was = heading;

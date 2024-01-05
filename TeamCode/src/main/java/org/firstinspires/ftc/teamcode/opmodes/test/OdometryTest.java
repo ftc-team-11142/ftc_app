@@ -87,7 +87,7 @@ public class OdometryTest extends LoggingOpMode {
         rightOdometer = hanger_right.encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
         centerOdometer = backRight.encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
 
-//        leftOdometer.setDirection(MotorEx.Direction.REVERSE);
+        leftOdometer.setDirection(MotorEx.Direction.REVERSE);
 //        rightOdometer.setDirection(MotorEx.Direction.REVERSE);
 //        centerOdometer.setDirection(MotorEx.Direction.REVERSE);
 
@@ -104,7 +104,7 @@ public class OdometryTest extends LoggingOpMode {
 
         Pose2d start_pose = new Pose2d(0,0,new Rotation2d(Math.toRadians(0)));
         odometry.updatePose(start_pose);
-
+//
         front_left.setDirection(DcMotorSimple.Direction.REVERSE);
         back_left.setDirection(DcMotorSimple.Direction.REVERSE);
 

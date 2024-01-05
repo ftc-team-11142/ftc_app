@@ -39,7 +39,7 @@ public class Odometry {
         right_odometer = hanger_right.encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
         center_odometer = back_right.encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
 
-        right_odometer.setDirection(MotorEx.Direction.REVERSE);
+        left_odometer.setDirection(MotorEx.Direction.REVERSE);
 
         odometry = new HolonomicIMUOdometry(
                 left_odometer::getDistance,
