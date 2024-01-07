@@ -35,17 +35,17 @@ public class LiftControl extends ControlModule{
         lift.setPower(ax_lift_right_y.get()*0.5);
 
         if (tray_up.get()) {
-            lift.setTrayPosition(0.684);
+            lift.setTrayPosition(0);
         }
         if (tray_down.get()) {
-            lift.setTrayPosition(0.404);
+            lift.setTrayPosition(0.271);
         }
 
         if (air_plane_launcher.get()) {
-            lift.setAPLPosition(0.5);
+            lift.setAPLPosition(0.259);
         }
         if(air_plane_launcher_a.get()) {
-            lift.setAPLPosition(-0.5);
+            lift.setAPLPosition(0.042);
         }
 
     }

@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
@@ -39,6 +40,8 @@ public class CloseBlueAuto extends LoggingOpMode{
     private FtcDashboard dashboard;
 
     private final Logger log = new Logger("Close Blue Auto");
+
+    ElapsedTime timer = new ElapsedTime();
 
     @Override
     public void init() {
@@ -102,6 +105,7 @@ public class CloseBlueAuto extends LoggingOpMode{
         odometry.resetEncoders();
         drivetrain.resetEncoders();
         camera.closeCameraDevice();
+        lift.setPixelHolderPosition(0.807);
     }
 
     @Override
@@ -118,30 +122,34 @@ public class CloseBlueAuto extends LoggingOpMode{
                     drivetrain.autoMove(29.136, -2.57, 0, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
+                        timer.reset();
+                        lift.setPixelHolderPosition(0.696);
                     }
                     break;
                 case 1:
-                    drivetrain.autoMove(24, -25, 0, 0.5, 0.5, 2, odometryPose, telemetry);
-                    if (drivetrain.hasReached()) {
-                        main_id += 1;
+                    if (timer.seconds() > 2) {
+                        drivetrain.autoMove(24, -25, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                        if (drivetrain.hasReached()) {
+                            main_id += 1;
+                        }
                     }
                     break;
                 case 2:
-//                    lift_target = -1208;
+                    lift_target = -1208;
                     drivetrain.autoMove(23.58, -25, 270, 1, 2, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
                 case 3:
-//                    lift.setTrayPosition(0.51);
-                    drivetrain.autoMove(23.58, -44.76, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                    lift.setTrayPosition(0.2);
+                    drivetrain.autoMove(23.58, -45.25, 270, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
                 case 4:
-//                    lift.setTrayPosition(0.736);
+                    lift.setTrayPosition(0.271);
                     break;
 
             }
@@ -149,84 +157,104 @@ public class CloseBlueAuto extends LoggingOpMode{
         if (result.equals("left")) {
             switch (main_id) {
                 case 0:
-                    drivetrain.autoMove(21.19, -17.57, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(21.19, -22, 0, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
                 case 1:
-                    drivetrain.autoMove(18, -30, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(21.19, -15, 0, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
+                        timer.reset();
+                        lift.setPixelHolderPosition(0.696);
                     }
                     break;
                 case 2:
-//                    lift_target = -1208;
+                    if (timer.seconds() > 2) {
+                        drivetrain.autoMove(18, -30, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                        if (drivetrain.hasReached()) {
+                            main_id += 1;
+                        }
+                    }
+                    break;
+                case 3:
+                    lift_target = -1208;
                     drivetrain.autoMove(23.58, -30, 270, 1, 2, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
-                case 3:
-//                    lift.setTrayPosition(0.51);
-                    drivetrain.autoMove(23.58, -44.76, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                case 4:
+                    lift.setTrayPosition(0.2);
+                    drivetrain.autoMove(16.5, -45.25, 270, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
-                case 4:
-//                    lift.setTrayPosition(0.736);
+                case 5:
+                    lift.setTrayPosition(0.271);
                     break;
             }
         }
         if (result.equals("right")) {
             switch (main_id) {
                 case 0:
-                    drivetrain.autoMove(24.51, -3.2, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(26, -15, 0, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
                 case 1:
-                    drivetrain.autoMove(24.77, 5, 270, 0.8, 0.8, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(26.7, -15, 90, 0.8, 0.8, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
                 case 2:
-                    drivetrain.autoMove(24, -25, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(26.7, 1.92, 90, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
+                        timer.reset();
+                        lift.setPixelHolderPosition(0.696);
                     }
                     break;
                 case 3:
-//                    lift_target = -1208;
+                    if (timer.seconds() > 2) {
+                        drivetrain.autoMove(26.7, -10, 90, 0.5, 0.5, 2, odometryPose, telemetry);
+                        if (drivetrain.hasReached()) {
+                            main_id += 1;
+                        }
+                    }
+                    break;
+                case 4:
+                    lift_target = -1208;
                     drivetrain.autoMove(23.58, -25, 270, 1, 2, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
-                case 4:
-//                    lift.setTrayPosition(0.51);
-                    drivetrain.autoMove(23.58, -44.76, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                case 5:
+                    lift.setTrayPosition(0.2);
+                    drivetrain.autoMove(30.5, -45.25, 270, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
-                case 5:
-//                    lift.setTrayPosition(0.736);
+                case 6:
+                    lift.setTrayPosition(0.271);
                     break;
             }
         }
 
 
-//        lift_power = (lift_target - lift.getLiftPosition()) * 0.03;
-//        if (Math.abs(lift_target - lift.getLiftPosition()) > 20) {
-////            lift.setPower(lift_power);
-//        }
-//        else {
-//            lift.setPower(0);
-//        }
+        lift_power = (lift_target - lift.getLiftPosition()) * 0.03;
+        if (Math.abs(lift_target - lift.getLiftPosition()) > 20) {
+            lift.setPower(lift_power);
+        }
+        else {
+            lift.setPower(0);
+        }
 
         drivetrain.update(odometryPose, telemetry,false, main_id, false, false,0);
 

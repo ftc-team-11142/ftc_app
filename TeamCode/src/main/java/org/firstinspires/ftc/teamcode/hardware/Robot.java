@@ -56,8 +56,9 @@ public class Robot {
         DcMotorEx intake_spinner = hardwareMap.get(DcMotorEx.class, "intake spinner");
 
         // Servos
-        CRServo air_plane_launcher = hardwareMap.get(CRServo.class, "air plane launcher");
+        Servo air_plane_launcher = hardwareMap.get(Servo.class, "air plane launcher");
         Servo lift_servo = hardwareMap.get(Servo.class, "lift servo");
+        Servo pixel_holder = hardwareMap.get(Servo.class, "pixel holder");
 
         // Sensors
         BNO055IMU imu_sensor = hardwareMap.get(BNO055IMU.class, "imu");
@@ -65,7 +66,7 @@ public class Robot {
         // Sub-Assemblies
         this.drivetrain = new Drivetrain(front_left, front_right.motorEx, back_left, back_right.motorEx, imu_sensor);
         this.intake = new Intake(intake_spinner);
-        this.lift = new Lift(lift, lift_servo ,air_plane_launcher);
+        this.lift = new Lift(lift, lift_servo ,air_plane_launcher, pixel_holder);
         this.hanger = new Hanger(hanger_left, hanger_right.motorEx);
         this.odometry = new Odometry(front_right, hanger_right, back_right, front_left,back_left);
     }

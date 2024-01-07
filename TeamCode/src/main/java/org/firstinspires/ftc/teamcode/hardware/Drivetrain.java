@@ -36,8 +36,8 @@ public class Drivetrain {
     public static double forward_ki = 0.0275;
     public static double forward_kd = 0.010;
     public static double forward_a = 0.8;
-    public static double strafe_kp = 0.071;
-    public static double strafe_ki = 0.0300;
+    public static double strafe_kp = 0.074; //71
+    public static double strafe_ki = 0.0450; //3
     public static double strafe_kd = 0.019;
     public static double strafe_a = 0.8;
     public static double turn_kp = 0.0075;
@@ -266,8 +266,12 @@ public class Drivetrain {
 
         forward_power = Range.clip(-forward_pid.getOutPut(forward,y,feed_forward),-0.5,0.5);
         strafe_power = Range.clip(-strafe_pid.getOutPut(strafe,x,feed_forward),-0.5,0.5);
-        turn_power = Range.clip((turn_pid.getOutPut(turn, rot, feed_forward)),-0.5,0.5);
-
+        if (rot == -777) {
+            turn_power = 0;
+        }
+        else {
+            turn_power = Range.clip((turn_pid.getOutPut(turn, rot, feed_forward)), -0.5, 0.5);
+        }
         botHeading = -1* Math.toRadians(heading);
 
         rotX = /*0.4 **/ (strafe_power * Math.cos(botHeading) - forward_power * Math.sin(botHeading));

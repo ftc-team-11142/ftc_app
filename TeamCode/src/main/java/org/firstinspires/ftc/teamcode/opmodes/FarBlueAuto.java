@@ -20,6 +20,8 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+import java.lang.annotation.ElementType;
+
 @Config
 @Autonomous(name = "!! FAR Blue Auto !!")
 public class FarBlueAuto extends LoggingOpMode{
@@ -42,6 +44,8 @@ public class FarBlueAuto extends LoggingOpMode{
     private FtcDashboard dashboard;
 
     private final Logger log = new Logger("Far Blue Auto");
+
+    ElapsedTime timer = new ElapsedTime();
 
     @Override
     public void init() {
@@ -105,6 +109,7 @@ public class FarBlueAuto extends LoggingOpMode{
         odometry.resetEncoders();
         drivetrain.resetEncoders();
         camera.closeCameraDevice();
+        lift.setPixelHolderPosition(0.807);
     }
 
     @Override
@@ -131,13 +136,20 @@ public class FarBlueAuto extends LoggingOpMode{
         if (result.equals("right")) {
             switch (main_id) {
                 case 0:
-                    drivetrain.autoMove(21.914, -14.067572, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(21.19, 12, 0, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
+                        timer.reset();
+                        lift.setPixelHolderPosition(0.696);
                     }
                     break;
                 case 1:
-                    drivetrain.autoMove(13, -14.3, 0, 0.8, 0.8, 2, odometryPose, telemetry);
+                    if (timer.seconds() > 2) {
+                        drivetrain.autoMove(18, 25, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                        if (drivetrain.hasReached()) {
+                            main_id += 1;
+                        }
+                    }
                     break;
             }
         }

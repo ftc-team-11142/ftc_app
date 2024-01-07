@@ -11,12 +11,14 @@ public class Lift {
 
     private final DcMotorEx lift;
     private final Servo lift_servo;
-    private final CRServo air_plane_launcher;
+    private final Servo pixel_holder;
+    private final Servo air_plane_launcher;
 
-    public Lift(DcMotorEx lift, Servo lift_servo, CRServo air_plane_launcher) {
+    public Lift(DcMotorEx lift, Servo lift_servo, Servo air_plane_launcher, Servo pixel_holder) {
         this.lift = lift;
         this.lift_servo = lift_servo;
         this.air_plane_launcher = air_plane_launcher;
+        this.pixel_holder = pixel_holder;
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
@@ -46,10 +48,14 @@ public class Lift {
     }
 
     public void setAPLPosition(double pos) {
-        air_plane_launcher.setPower(pos);
+        air_plane_launcher.setPosition(pos);
     }
 
-//    public double getAPLPosition() {
+    public void setPixelHolderPosition(double pos) {
+        pixel_holder.setPosition(pos);
+    }
+
+    //    public double getAPLPosition() {
 //        return air_plane_launcher.getPosition();
 //    }
 }

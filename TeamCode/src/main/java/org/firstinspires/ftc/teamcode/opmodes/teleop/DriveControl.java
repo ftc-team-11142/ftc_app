@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.input.ControllerMap;
 public class DriveControl extends ControlModule {
 
     private Drivetrain drivetrain;
-//    private Odometry odometry;
+    private Odometry odometry;
 
     private ControllerMap.AxisEntry ax_drive_left_x;
     private ControllerMap.AxisEntry ax_drive_left_y;
@@ -20,11 +20,12 @@ public class DriveControl extends ControlModule {
 //    private ControllerMap.AxisEntry ax_horizontal_left_x;
     private ControllerMap.AxisEntry ax_slow;
     private ControllerMap.ButtonEntry left_bumper;
+    private ControllerMap.ButtonEntry right_bumper;
     private ControllerMap.ButtonEntry dpad_up;
     private ControllerMap.ButtonEntry dpad_down;
     private ControllerMap.ButtonEntry dpad_left;
     private ControllerMap.ButtonEntry dpad_right;
-    private ControllerMap.ButtonEntry drive_direction;
+    private ControllerMap.ButtonEntry b_button;
 
     private double forward_speed = 1;
     private double strafe_speed = 1.1;
@@ -33,6 +34,7 @@ public class DriveControl extends ControlModule {
     private boolean field_centric = false;
     private boolean smooth = false;
     private boolean direction_flip = false;
+    private boolean under_rigging = false;
 
     private double heading_delta = 0;
     private double heading_was = 0;
@@ -64,6 +66,8 @@ public class DriveControl extends ControlModule {
     private double ADJUSTHORIZ = 0;
     private double MAXEXTENDEDHORIZ = 1440;
 
+    private int rigging_id = 0;
+
     public DriveControl(String name) {
         super(name);
     }
@@ -71,7 +75,7 @@ public class DriveControl extends ControlModule {
     @Override
     public void initialize(Robot robot, ControllerMap controllerMap, ControlMgr manager) {
         this.drivetrain = robot.drivetrain;
-//        this.odometry = robot.odometry;
+        this.odometry = robot.odometry;
 
         ax_drive_left_x = controllerMap.getAxisMap("drive:left_x", "gamepad1", "left_stick_x");
         ax_drive_left_y = controllerMap.getAxisMap("drive:right_y", "gamepad1", "left_stick_y");
@@ -80,14 +84,15 @@ public class DriveControl extends ControlModule {
 //
 //        ax_horizontal_left_x = controllerMap.getAxisMap("horizontal:left_x", "gamepad2", "left_stick_x");
 
-        left_bumper = controllerMap.getButtonMap("drive:left_trigger", "gamepad1","left_bumper");
+        left_bumper = controllerMap.getButtonMap("drive:left_bumper", "gamepad1","left_bumper");
+        right_bumper = controllerMap.getButtonMap("drive:right_bumper", "gamepad1","right_bumper");
 
         dpad_up = controllerMap.getButtonMap("drive:dpad_up", "gamepad1","dpad_up");
         dpad_down = controllerMap.getButtonMap("drive:dpad_down", "gamepad1","dpad_down");
         dpad_left = controllerMap.getButtonMap("drive:dpad_left", "gamepad1","dpad_left");
         dpad_right = controllerMap.getButtonMap("drive:dpad_right", "gamepad1","dpad_right");
 
-        drive_direction = controllerMap.getButtonMap("drive:drive_direction", "gamepad2","b");
+        b_button = controllerMap.getButtonMap("drive:b_button", "gamepad2","b");
 
     }
 
@@ -103,8 +108,32 @@ public class DriveControl extends ControlModule {
 
         double heading = drivetrain.getHeading();
 
-        if(drive_direction.edge() == -1) {
+        odometry.updatePose(-heading);
+        Pose2d odometryPose = odometry.getPose();
+
+        if(left_bumper.edge() == -1) {
             direction_flip = !direction_flip;
+        }
+
+        if(right_bumper.edge() == -1) {
+            under_rigging = !under_rigging;
+            odometry.resetEncoders();
+            rigging_id = 0;
+        }
+
+        if (under_rigging) {
+            switch (rigging_id) {
+                case 0:
+                    drivetrain.autoMove(0, -20, -777, 0.5, 0.5, 2, odometryPose, telemetry);
+                    if (drivetrain.hasReached()) {
+                        rigging_id += 1;
+                    }
+                    break;
+                case 1:
+                    under_rigging = false;
+                    break;
+            }
+            drivetrain.update(odometryPose, telemetry,false, rigging_id, false, false,0);
         }
 
         if(dpad_up.edge() == -1) {
@@ -128,7 +157,7 @@ public class DriveControl extends ControlModule {
             angled_turn = false;
         }
 
-        if (left_bumper.edge() == -1) {
+        if (b_button.edge() == -1) {
             field_centric = !field_centric;
         }
 

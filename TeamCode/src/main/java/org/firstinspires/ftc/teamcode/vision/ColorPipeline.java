@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.vision;
 
+
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -22,6 +23,10 @@ public class ColorPipeline extends OpenCvPipeline {
     private String side;
     String location = "left";
     String color = "";
+    String hsv_color = "";
+    String hsv_color_2 = "";
+
+    private Mat hsv = new Mat();
 
     public ColorPipeline(int x1, int y1, int x2, int y2, String side) {
         this.x1 = x1;
@@ -35,17 +40,18 @@ public class ColorPipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
+        Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
 
-        if (input.empty()) {
+        if (hsv.empty()) {
             location = "center";
             return input;
         }
 
         if (side.equals("far red")) {
-            if ((input.get(y1,x1)[0] - input.get(y1,x1)[2]) > 60) {
+            if (hsv.get(y1,x1)[1] > 100) {
                 location = "center";
             }
-            else if ((input.get(y2,x2)[0] - input.get(y2,x2)[2]) > 60) {
+            else if (hsv.get(y2,x2)[1] > 100) {
                 location = "right";
             }
             else {
@@ -54,10 +60,10 @@ public class ColorPipeline extends OpenCvPipeline {
         }
 
         if (side.equals("far blue")) {
-            if ((input.get(y1,x1)[2] - input.get(y1,x1)[0]) > 60) {
+            if (hsv.get(y1,x1)[1] > 100) {
                 location = "center";
             }
-            else if ((input.get(y2,x2)[2] - input.get(y2,x2)[0]) > 60) {
+            else if (hsv.get(y2,x2)[1] > 100) {
                 location = "left";
             }
             else {
@@ -66,10 +72,10 @@ public class ColorPipeline extends OpenCvPipeline {
         }
 
         if (side.equals("close blue")) {
-            if ((input.get(y1,x1)[2] - input.get(y1,x1)[0]) > 60) {
+            if (hsv.get(y1,x1)[1] > 100) {
                 location = "center";
             }
-            else if ((input.get(y2,x2)[2] - input.get(y2,x2)[0]) > 60) {
+            else if (hsv.get(y2,x2)[1] > 100) {
                 location = "right";
             }
             else {
@@ -78,10 +84,10 @@ public class ColorPipeline extends OpenCvPipeline {
         }
 
         if (side.equals("close red")) {
-            if ((input.get(y1,x1)[0] - input.get(y1,x1)[2]) > 60) {
+            if (hsv.get(y1,x1)[1] > 100) {
                 location = "center";
             }
-            else if ((input.get(y2,x2)[0] - input.get(y2,x2)[2]) > 60) {
+            else if (hsv.get(y2,x2)[1] > 100) {
                 location = "left";
             }
             else {
@@ -93,6 +99,8 @@ public class ColorPipeline extends OpenCvPipeline {
 
         color = Arrays.toString(input.get(y1,x1));
 
+        hsv_color = Arrays.toString(hsv.get(y1,x1));
+        hsv_color_2 = Arrays.toString(hsv.get(y2,x2));
         return input;
     }
 
@@ -101,5 +109,11 @@ public class ColorPipeline extends OpenCvPipeline {
     }
     public String getColorValue() {
         return this.color;
+    }
+    public String getColorHSVValue() {
+        return this.hsv_color;
+    }
+    public String getColorHSVValue2() {
+        return this.hsv_color_2;
     }
 }

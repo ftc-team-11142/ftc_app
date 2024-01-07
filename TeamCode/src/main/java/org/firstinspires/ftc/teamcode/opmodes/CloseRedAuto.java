@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
@@ -37,6 +38,8 @@ public class CloseRedAuto extends LoggingOpMode{
     private ColorPipeline pipeline;
 
     private FtcDashboard dashboard;
+
+    ElapsedTime timer = new ElapsedTime();
 
     private final Logger log = new Logger("Close Red Auto");
 
@@ -101,6 +104,7 @@ public class CloseRedAuto extends LoggingOpMode{
         odometry.resetEncoders();
         drivetrain.resetEncoders();
         camera.closeCameraDevice();
+        lift.setPixelHolderPosition(0.807);
     }
 
     @Override
@@ -114,33 +118,37 @@ public class CloseRedAuto extends LoggingOpMode{
         if (result.equals("center")) {
             switch (main_id) {
                 case 0:
-                    drivetrain.autoMove(-31, -2, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(29.136, 2.57, 0, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
+                        timer.reset();
+                        lift.setPixelHolderPosition(0.696);
                     }
                     break;
                 case 1:
-                    drivetrain.autoMove(-20, -2, 0, 0.5, 0.5, 2, odometryPose, telemetry);
-                    if (drivetrain.hasReached()) {
-                        main_id += 1;
+                    if (timer.seconds() > 2) {
+                        drivetrain.autoMove(24, 25, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                        if (drivetrain.hasReached()) {
+                            main_id += 1;
+                        }
                     }
                     break;
                 case 2:
-                    lift_target = -1315;
-                    drivetrain.autoMove(-25, -20, 270, 1, 2, 2, odometryPose, telemetry);
+                    lift_target = -1208;
+                    drivetrain.autoMove(23.58, 25, 270, 1, 2, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
                 case 3:
-                    lift.setTrayPosition(0.51);
-                    drivetrain.autoMove(-30.19, -44.29, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                    lift.setTrayPosition(0.2);
+                    drivetrain.autoMove(23.58, 44, 270, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
                 case 4:
-                    lift.setTrayPosition(0.648);
+                    lift.setTrayPosition(0.271);
                     break;
 
             }
@@ -148,33 +156,37 @@ public class CloseRedAuto extends LoggingOpMode{
         if (result.equals("right")) {
             switch (main_id) {
                 case 0:
-                    drivetrain.autoMove(-21.914, -14.067572, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(21.19, 12, 0, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
+                        timer.reset();
+                        lift.setPixelHolderPosition(0.696);
                     }
                     break;
                 case 1:
-                    drivetrain.autoMove(-13, -14.3, 0, 0.8, 0.8, 2, odometryPose, telemetry);
-                    if (drivetrain.hasReached()) {
-                        main_id += 1;
+                    if (timer.seconds() > 2) {
+                        drivetrain.autoMove(18, 30, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                        if (drivetrain.hasReached()) {
+                            main_id += 1;
+                        }
                     }
                     break;
                 case 2:
-                    lift_target = -1315;
-                    drivetrain.autoMove(-15, -20, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                    lift_target = -1208;
+                    drivetrain.autoMove(23.58, 30, 90, 1, 2, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
                 case 3:
-                    lift.setTrayPosition(0.51);
-                    drivetrain.autoMove(-23.2177, -44.29, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                    lift.setTrayPosition(0.2);
+                    drivetrain.autoMove(16.5, 44.29, 90, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
                 case 4:
-                    lift.setTrayPosition(0.648);
+                    lift.setTrayPosition(0.271);
                     break;
             }
         }

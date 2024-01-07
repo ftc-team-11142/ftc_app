@@ -41,6 +41,8 @@ public class FarRedAuto extends LoggingOpMode{
 
     private FtcDashboard dashboard;
 
+    ElapsedTime timer = new ElapsedTime();
+
     private final Logger log = new Logger("Far Red Auto");
 
     @Override
@@ -95,6 +97,8 @@ public class FarRedAuto extends LoggingOpMode{
 
         telemetry.addData("Result", result);
         telemetry.addData("color", pipeline.getColorValue());
+        telemetry.addData("HSV color", pipeline.getColorHSVValue());
+        telemetry.addData("HSV color 2", pipeline.getColorHSVValue2());
         telemetry.update();
     }
 
@@ -105,6 +109,7 @@ public class FarRedAuto extends LoggingOpMode{
         odometry.resetEncoders();
         drivetrain.resetEncoders();
         camera.closeCameraDevice();
+        lift.setPixelHolderPosition(0.807);
     }
 
     @Override
@@ -118,51 +123,78 @@ public class FarRedAuto extends LoggingOpMode{
         if (result.equals("center")) {
             switch (main_id) {
                 case 0:
-                    drivetrain.autoMove(31, 2, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(29.136, -2.57, 0, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
+                        timer.reset();
+                        lift.setPixelHolderPosition(0.696);
                     }
                     break;
                 case 1:
-                    drivetrain.autoMove(20, 2, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                    if (timer.seconds() > 2) {
+                        drivetrain.autoMove(24, -2.57, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                        if (drivetrain.hasReached()) {
+                            main_id += 1;
+                        }
+                    }
                     break;
             }
         }
         if (result.equals("left")) {
             switch (main_id) {
                 case 0:
-                    drivetrain.autoMove(21.914, 14.067572, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(21.19, -22, 0, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
                 case 1:
-                    drivetrain.autoMove(13, 14.3, 0, 0.8, 0.8, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(21.19, -15, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                    if (drivetrain.hasReached()) {
+                        main_id += 1;
+                        timer.reset();
+                        lift.setPixelHolderPosition(0.696);
+                    }
+                    break;
+                case 2:
+                    if (timer.seconds() > 2) {
+                        drivetrain.autoMove(18, -25, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                        if (drivetrain.hasReached()) {
+                            main_id += 1;
+                        }
+                    }
                     break;
             }
         }
         if (result.equals("right")) {
             switch (main_id) {
                 case 0:
-                    drivetrain.autoMove(28.25, 5.387, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(26, -15, 0, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
                 case 1:
-                    drivetrain.autoMove(32, 9.784, 90, 0.8, 0.8, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(26.7, -15, 90, 0.8, 0.8, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
                 case 2:
-                    drivetrain.autoMove(31.7, 0.215, 90, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(26.7, 1.92, 90, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
+                        timer.reset();
+                        lift.setPixelHolderPosition(0.696);
                     }
                     break;
                 case 3:
-                    drivetrain.autoMove(31, 10, 90, 0.5, 0.5, 2, odometryPose, telemetry);
+                    if (timer.seconds() > 2) {
+                        drivetrain.autoMove(26.7, -10, 90, 0.5, 0.5, 2, odometryPose, telemetry);
+                        if (drivetrain.hasReached()) {
+                            main_id += 1;
+                        }
+                    }
                     break;
             }
         }
