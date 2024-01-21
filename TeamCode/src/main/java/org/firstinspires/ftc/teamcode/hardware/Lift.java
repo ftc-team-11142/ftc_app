@@ -9,53 +9,51 @@ import org.tensorflow.lite.annotations.UsedByReflection;
 
 public class Lift {
 
-    private final DcMotorEx lift;
-    private final Servo lift_servo;
-    private final Servo pixel_holder;
+    private final DcMotorEx lift_left;
+    private final DcMotorEx lift_right;
+    private final Servo arm_left;
+    private final Servo arm_right;
+
     private final Servo air_plane_launcher;
 
-    public Lift(DcMotorEx lift, Servo lift_servo, Servo air_plane_launcher, Servo pixel_holder) {
-        this.lift = lift;
-        this.lift_servo = lift_servo;
+    public Lift(DcMotorEx lift_left, DcMotorEx lift_right, Servo arm_left, Servo arm_right, Servo air_plane_launcher) {
+        this.lift_left = lift_left;
+        this.lift_right = lift_right;
+        this.arm_left = arm_left;
+        this.arm_right = arm_right;
         this.air_plane_launcher = air_plane_launcher;
-        this.pixel_holder = pixel_holder;
-        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lift_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lift_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void resetEncoders() {
-        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lift_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lift_left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        lift_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lift_right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public double getLiftPosition() {
-        return lift.getCurrentPosition();
-    }
-
-    public void runToPosition(int pos) {
-        lift.setTargetPosition(-1170);
+        return lift_left.getCurrentPosition();
     }
 
     public void setPower(double pow) {
-        lift.setPower(pow);
+        lift_left.setPower(pow);
+        lift_right.setPower(-pow);
     }
 
-    public void setTrayPosition(double pos) {
-        lift_servo.setPosition(pos);
+    public void setArmPosition(double pos) {
+        arm_left.setPosition(pos);
+        arm_right.setPosition(pos); //TODO
     }
 
-    public double getTrayPosition() {
-        return lift_servo.getPosition();
-    }
+//    public void setArmPower(double pos) {
+//        arm_left.setPosition(pos);
+//        arm_right.setPosition(pos);
+//    }
 
     public void setAPLPosition(double pos) {
         air_plane_launcher.setPosition(pos);
     }
-
-    public void setPixelHolderPosition(double pos) {
-        pixel_holder.setPosition(pos);
-    }
-
-    //    public double getAPLPosition() {
-//        return air_plane_launcher.getPosition();
-//    }
 }

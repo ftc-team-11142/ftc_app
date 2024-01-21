@@ -9,10 +9,10 @@ public class LiftControl extends ControlModule{
 
     private Lift lift;
     private ControllerMap.AxisEntry ax_lift_right_y;
-    private ControllerMap.ButtonEntry tray_up;
-    private ControllerMap.ButtonEntry tray_down;
-    private ControllerMap.ButtonEntry air_plane_launcher;
-    private ControllerMap.ButtonEntry air_plane_launcher_a;
+    private ControllerMap.ButtonEntry arm_up;
+    private ControllerMap.ButtonEntry arm_down;
+    private ControllerMap.ButtonEntry launch_drone;
+    private ControllerMap.ButtonEntry load_drone;
 
     public LiftControl(String name) {
         super(name);
@@ -23,10 +23,10 @@ public class LiftControl extends ControlModule{
         this.lift = robot.lift;
         ax_lift_right_y = controllerMap.getAxisMap("lift:right_y", "gamepad2", "right_stick_y");
 
-        tray_up = controllerMap.getButtonMap("lift:tray_up", "gamepad1","y");
-        tray_down = controllerMap.getButtonMap("lift:tray_down", "gamepad1","a");
-        air_plane_launcher = controllerMap.getButtonMap("lift:air_plane_launcher", "gamepad2","y");
-        air_plane_launcher_a = controllerMap.getButtonMap("lift:air_plane_launcher_a", "gamepad2","a");
+        arm_up = controllerMap.getButtonMap("lift:arm_up", "gamepad1","y");
+        arm_down = controllerMap.getButtonMap("lift:arm_down", "gamepad1","a");
+        launch_drone = controllerMap.getButtonMap("lift:launch_drone", "gamepad2","y");
+        load_drone = controllerMap.getButtonMap("lift:load_drone", "gamepad2","a");
     }
 
     @Override
@@ -34,17 +34,17 @@ public class LiftControl extends ControlModule{
 
         lift.setPower(ax_lift_right_y.get()*0.5);
 
-        if (tray_up.get()) {
-            lift.setTrayPosition(0);
+        if (arm_up.get()) {
+//            lift.setArmPosition();
         }
-        if (tray_down.get()) {
-            lift.setTrayPosition(0.271);
+        if (arm_down.get()) {
+//            lift.setArmPosition();
         }
 
-        if (air_plane_launcher.get()) {
+        if (launch_drone.get()) {
             lift.setAPLPosition(0.259);
         }
-        if(air_plane_launcher_a.get()) {
+        if(load_drone.get()) {
             lift.setAPLPosition(0.042);
         }
 

@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.input.ControllerMap;
 public class DriveControl extends ControlModule {
 
     private Drivetrain drivetrain;
-    private Odometry odometry;
+//    private Odometry odometry;
 
     private ControllerMap.AxisEntry ax_drive_left_x;
     private ControllerMap.AxisEntry ax_drive_left_y;
@@ -75,7 +75,7 @@ public class DriveControl extends ControlModule {
     @Override
     public void initialize(Robot robot, ControllerMap controllerMap, ControlMgr manager) {
         this.drivetrain = robot.drivetrain;
-        this.odometry = robot.odometry;
+//        this.odometry = robot.odometry;
 
         ax_drive_left_x = controllerMap.getAxisMap("drive:left_x", "gamepad1", "left_stick_x");
         ax_drive_left_y = controllerMap.getAxisMap("drive:right_y", "gamepad1", "left_stick_y");
@@ -108,33 +108,33 @@ public class DriveControl extends ControlModule {
 
         double heading = drivetrain.getHeading();
 
-        odometry.updatePose(-heading);
-        Pose2d odometryPose = odometry.getPose();
+//        odometry.updatePose(-heading);
+//        Pose2d odometryPose = odometry.getPose();
 
         if(left_bumper.edge() == -1) {
             direction_flip = !direction_flip;
         }
 
-        if(right_bumper.edge() == -1) {
-            under_rigging = !under_rigging;
-            odometry.resetEncoders();
-            rigging_id = 0;
-        }
+//        if(right_bumper.edge() == -1) {
+//            under_rigging = !under_rigging;
+//            odometry.resetEncoders();
+//            rigging_id = 0;
+//        }
 
-        if (under_rigging) {
-            switch (rigging_id) {
-                case 0:
-                    drivetrain.autoMove(0, -20, -777, 0.5, 0.5, 2, odometryPose, telemetry);
-                    if (drivetrain.hasReached()) {
-                        rigging_id += 1;
-                    }
-                    break;
-                case 1:
-                    under_rigging = false;
-                    break;
-            }
-            drivetrain.update(odometryPose, telemetry,false, rigging_id, false, false,0);
-        }
+//        if (under_rigging) {
+//            switch (rigging_id) {
+//                case 0:
+//                    drivetrain.autoMove(0, -20, -777, 0.5, 0.5, 2, odometryPose, telemetry);
+//                    if (drivetrain.hasReached()) {
+//                        rigging_id += 1;
+//                    }
+//                    break;
+//                case 1:
+//                    under_rigging = false;
+//                    break;
+//            }
+////            drivetrain.update(odometryPose, telemetry,false, rigging_id, false, false,0);
+//        }
 
         if(dpad_up.edge() == -1) {
             turn_angle = 0;

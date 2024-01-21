@@ -50,24 +50,30 @@ public class Robot {
         MotorEx front_right = new MotorEx(hardwareMap, "front right");
         DcMotorEx back_left = hardwareMap.get(DcMotorEx.class, "back left");
         MotorEx back_right = new MotorEx(hardwareMap, "back right");
-        DcMotorEx lift = hardwareMap.get(DcMotorEx.class, "lift");
-        DcMotorEx hanger_left = hardwareMap.get(DcMotorEx.class, "hanger left");
-        MotorEx hanger_right = new MotorEx(hardwareMap, "hanger right");
-        DcMotorEx intake_spinner = hardwareMap.get(DcMotorEx.class, "intake spinner");
+//        DcMotorEx lift_left = hardwareMap.get(DcMotorEx.class, "lift left");
+//        DcMotorEx lift_right = hardwareMap.get(DcMotorEx.class, "lift right");
+//        DcMotorEx hanger_left = hardwareMap.get(DcMotorEx.class, "hanger left");
+//        MotorEx hanger_right = new MotorEx(hardwareMap, "hanger right");
 
         // Servos
-        Servo air_plane_launcher = hardwareMap.get(Servo.class, "air plane launcher");
-        Servo lift_servo = hardwareMap.get(Servo.class, "lift servo");
-        Servo pixel_holder = hardwareMap.get(Servo.class, "pixel holder");
+//        Servo air_plane_launcher = hardwareMap.get(Servo.class, "air plane launcher");
+//        Servo arm_left = hardwareMap.get(Servo.class, "arm left");
+//        Servo arm_right = hardwareMap.get(Servo.class, "arm right");
+//        Servo pixel_holder = hardwareMap.get(Servo.class, "pixel holder");
+//        Servo claw = hardwareMap.get(Servo.class, "claw");
+
 
         // Sensors
         BNO055IMU imu_sensor = hardwareMap.get(BNO055IMU.class, "imu");
+//        DistanceSensor claw_sensor_left = hardwareMap.get(DistanceSensor.class, "claw sensor left");
+//        DistanceSensor claw_sensor_right = hardwareMap.get(DistanceSensor.class, "claw sensor right");
+
 
         // Sub-Assemblies
-        this.drivetrain = new Drivetrain(front_left, front_right.motorEx, back_left, back_right.motorEx, imu_sensor);
-        this.intake = new Intake(intake_spinner);
-        this.lift = new Lift(lift, lift_servo ,air_plane_launcher, pixel_holder);
-        this.hanger = new Hanger(hanger_left, hanger_right.motorEx);
-        this.odometry = new Odometry(front_right, hanger_right, back_right, front_left,back_left);
+        this.drivetrain = new Drivetrain(front_left, front_right.motorEx, back_left, back_right.motorEx, imu_sensor/*, pixel_holder*/);
+//        this.intake = new Intake(claw, claw_sensor_left, claw_sensor_right);
+//        this.lift = new Lift(lift_left, lift_right, arm_left, arm_right, air_plane_launcher);
+//        this.hanger = new Hanger(hanger_left, hanger_right.motorEx);
+//        this.odometry = new Odometry(front_right, hanger_right, back_right, front_left,back_left);
     }
 }
