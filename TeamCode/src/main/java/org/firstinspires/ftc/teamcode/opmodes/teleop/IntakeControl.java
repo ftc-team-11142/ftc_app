@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.Intake;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
@@ -9,7 +11,18 @@ public class IntakeControl extends ControlModule{
 
     private Intake intake;
     private ControllerMap.ButtonEntry intake_button;
-    private Boolean claw_open = true;
+    private ControllerMap.ButtonEntry claw_high_button;
+    private ControllerMap.ButtonEntry claw_mid_button;
+    private ControllerMap.ButtonEntry claw_down_button;
+
+    private boolean claw_high = false;
+    private boolean claw_mid = false;
+    private boolean claw_down = true;
+    private boolean claw_open = true;
+
+    private String previous_state = "claw_down";
+
+    private ElapsedTime sequencing_timer = new ElapsedTime();
 
     public IntakeControl(String name) {
         super(name);
@@ -19,8 +32,10 @@ public class IntakeControl extends ControlModule{
     @Override
     public void initialize(Robot robot, ControllerMap controllerMap, ControlMgr manager) {
         this.intake = robot.intake;
-        intake_button = controllerMap.getButtonMap("intake:right_trigger", "gamepad1","x");
-
+        intake_button = controllerMap.getButtonMap("intake:claw", "gamepad1","right_bumper");
+        claw_high_button = controllerMap.getButtonMap("claw:high", "gamepad2", "y");
+        claw_mid_button = controllerMap.getButtonMap("claw:mid", "gamepad2", "b");
+        claw_down_button = controllerMap.getButtonMap("claw:down", "gamepad2", "a");
     }
 
     @Override
@@ -30,12 +45,85 @@ public class IntakeControl extends ControlModule{
         }
 
         if (claw_open) {
-            intake.setClawleftPosition(0.75);
-            intake.setClawRightPosition(0.25);
+            intake.setLeftPosition(0.75);
+            intake.setRightPosition(0.25);
         }
         else {
-            intake.setClawleftPosition(1);
-            intake.setClawRightPosition(0.0);
+            intake.setLeftPosition(1);
+            intake.setRightPosition(0.0);
+        }
+
+        if (claw_high_button.edge() == -1) {
+
+            if (claw_mid) {
+                previous_state = "claw_mid";
+            }
+            if (claw_down) {
+                previous_state = "claw_down";
+            }
+
+            claw_high = true;
+            claw_mid = false;
+            claw_down = false;
+
+            claw_open = false;
+
+            sequencing_timer.reset();
+        }
+
+        if (claw_mid_button.edge() == -1) {
+
+            if (claw_high) {
+                previous_state = "claw_high";
+            }
+            if (claw_down) {
+                previous_state = "claw_down";
+            }
+
+            claw_high = false;
+            claw_mid = true;
+            claw_down = false;
+
+            claw_open = false;
+            sequencing_timer.reset();
+        }
+
+        if (claw_down_button.edge() == -1) {
+            if (claw_high) {
+                previous_state = "claw_high";
+            }
+            if (claw_mid) {
+                previous_state = "claw_mid";
+            }
+
+            claw_high = false;
+            claw_mid = false;
+            claw_down = true;
+
+            claw_open = true;
+            sequencing_timer.reset();
+        }
+
+        if (claw_high) {
+            if ((sequencing_timer.seconds() > 1.8) && previous_state.equals("claw_down")) { //TODO sequencing delays based of servo stuff
+                intake.setWristPosition(0);
+            }
+            else {
+                intake.setWristPosition(0);
+            }
+        }
+
+        if (claw_mid) {
+            if ((sequencing_timer.seconds() > 1.8) && previous_state.equals("claw_down")) {
+                intake.setWristPosition(0);
+            }
+            else {
+                intake.setWristPosition(0);
+            }
+        }
+
+        if (claw_down) {
+                intake.setWristPosition(0);
         }
 
     }

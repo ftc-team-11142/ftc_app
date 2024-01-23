@@ -33,9 +33,9 @@ public class Drivetrain {
     private final BNO055IMU imu;
     private boolean has_reached;
 
-    public static double forward_kp = 0.061;
-    public static double forward_ki = 0.03;
-    public static double forward_kd = 0.010;
+    public static double forward_kp = 0.074;
+    public static double forward_ki = 0.0450;
+    public static double forward_kd = 0.013;
     public static double forward_a = 0.8;
     public static double strafe_kp = 0.074; //71
     public static double strafe_ki = 0.0450; //3
@@ -90,15 +90,12 @@ public class Drivetrain {
     private double heading_was;
     private double heading;
 
-    private Servo pixel_holder;
-
-    public Drivetrain(DcMotorEx front_left, DcMotorEx front_right, DcMotorEx back_left, DcMotorEx back_right, BNO055IMU imu/*, Servo pixel_holder*/) {
+    public Drivetrain(DcMotorEx front_left, DcMotorEx front_right, DcMotorEx back_left, DcMotorEx back_right, BNO055IMU imu) {
         this.front_left = front_left;
         this.front_right = front_right;
         this.back_left = back_left;
         this.back_right = back_right;
         this.imu = imu;
-//        this.pixel_holder = pixel_holder;
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -336,7 +333,4 @@ public class Drivetrain {
         heading = imu.getAngularOrientation().firstAngle;
     }
 
-//    public void setPixelHolderPosition(double pos) {
-//        pixel_holder.setPosition(pos);
-//    }
 }

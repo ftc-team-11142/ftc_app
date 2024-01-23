@@ -6,6 +6,7 @@
 //import com.arcrobotics.ftclib.geometry.Pose2d;
 //import com.arcrobotics.ftclib.geometry.Rotation2d;
 //import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+//import com.qualcomm.robotcore.hardware.Servo;
 //import com.qualcomm.robotcore.util.ElapsedTime;
 //
 //import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -27,6 +28,9 @@
 //    private Lift lift;
 //    private Odometry odometry;
 //
+//    private Servo pixel_dragger;
+//    private Servo pixel_dropper;
+//
 //    private boolean stop = false;
 //
 //    private String result = "Nothing";
@@ -42,6 +46,7 @@
 //    private FtcDashboard dashboard;
 //
 //    ElapsedTime timer = new ElapsedTime();
+//    ElapsedTime game_timer = new ElapsedTime();
 //
 //    private final Logger log = new Logger("Far Red Auto");
 //
@@ -60,6 +65,9 @@
 //
 //        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 //        dashboard = FtcDashboard.getInstance();
+//
+//        pixel_dragger = hardwareMap.get(Servo.class, "pixel dragger");
+//        pixel_dropper = hardwareMap.get(Servo.class, "pixel dropper");
 //
 //        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 //        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -105,11 +113,10 @@
 //    @Override
 //    public void start() {
 //        super.start();
-//        lift.resetEncoders();
 //        odometry.resetEncoders();
 //        drivetrain.resetEncoders();
-//        camera.closeCameraDevice();
-//        drivetrain.setPixelHolderPosition(0.807);
+//        pixel_dragger.setPosition(0.807);
+//        game_timer.reset();
 //    }
 //
 //    @Override
@@ -127,7 +134,7 @@
 //                    if (drivetrain.hasReached()) {
 //                        main_id += 1;
 //                        timer.reset();
-//                        drivetrain.setPixelHolderPosition(0.696);
+//                        pixel_dragger.setPosition(0.696);
 //                    }
 //                    break;
 //                case 1:
@@ -153,7 +160,7 @@
 //                    if (drivetrain.hasReached()) {
 //                        main_id += 1;
 //                        timer.reset();
-//                        drivetrain.setPixelHolderPosition(0.696);
+//                        pixel_dragger.setPosition(0.696);
 //                    }
 //                    break;
 //                case 2:
@@ -185,7 +192,7 @@
 //                    if (drivetrain.hasReached()) {
 //                        main_id += 1;
 //                        timer.reset();
-//                        drivetrain.setPixelHolderPosition(0.696);
+//                        pixel_dragger.setPosition(0.696);
 //                    }
 //                    break;
 //                case 3:
@@ -210,7 +217,7 @@
 //
 //        drivetrain.update(odometryPose, telemetry,false, main_id, false, false,0);
 //
-//        telemetry.addData("Lift Position", lift.getLiftPosition());
+////        telemetry.addData("Lift Position", lift.get());
 //        telemetry.addData("Lift Target", lift_target);
 //        telemetry.addData("Lift Power", lift_power);
 //        telemetry.addData("Main ID", main_id);
@@ -219,5 +226,14 @@
 //
 //        LoopTimer.resetTimer();
 //
+//        if (game_timer.seconds() > 29.0) {
+//            camera.closeCameraDevice();
+//        }
+//    }
+//
+//    @Override
+//    public void stop() {
+//        super.stop();
+//        camera.closeCameraDevice();
 //    }
 //}
