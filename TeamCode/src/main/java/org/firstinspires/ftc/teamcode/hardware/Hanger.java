@@ -12,7 +12,6 @@ public class Hanger {
         this.hanger_left = hanger_left;
         this.hanger_right = hanger_right;
 
-        hanger_right.setDirection(DcMotorSimple.Direction.REVERSE);
 
         hanger_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         hanger_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

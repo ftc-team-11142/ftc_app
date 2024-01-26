@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -7,6 +8,7 @@ import org.firstinspires.ftc.teamcode.hardware.Arm;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.input.ControllerMap;
 
+@Config
 public class ArmControl extends ControlModule{
 
     private Arm arm;
@@ -27,6 +29,12 @@ public class ArmControl extends ControlModule{
     public ArmControl(String name) {
         super(name);
     }
+
+    public static double down_arm = 0;
+    public static double mid_arm = 0;
+    public static double high_arm = 0;
+    public static double delay_high_arm = 1.8;
+    public static double delay_mid_arm = 1.8;
 
     @Override
     public void initialize(Robot robot, ControllerMap controllerMap, ControlMgr manager) {
@@ -87,25 +95,25 @@ public class ArmControl extends ControlModule{
         }
 
         if (arm_high) {
-            if (sequencing_timer.seconds() > 1.8 && previous_state.equals("arm_down")) {
-                arm.setPosition(0);
+            if (sequencing_timer.seconds() > delay_high_arm && previous_state.equals("arm_down")) {
+                arm.setPosition(high_arm);
             }
             else {
-                arm.setPosition(0);
+                arm.setPosition(high_arm);
             }
         }
 
         if (arm_mid) {
-            if (sequencing_timer.seconds() > 1.8 && previous_state.equals("arm_down")) {
-                arm.setPosition(0);
+            if (sequencing_timer.seconds() > delay_mid_arm && previous_state.equals("arm_down")) {
+                arm.setPosition(mid_arm);
             }
             else {
-                arm.setPosition(0);
+                arm.setPosition(mid_arm);
             }
         }
 
         if (arm_down) {
-            arm.setPosition(0);
+            arm.setPosition(down_arm);
         }
 
     }

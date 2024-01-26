@@ -13,15 +13,15 @@ public class Intake {
     private final Servo claw_left;
     private final Servo claw_right;
     private final Servo claw_wrist;
-    private final DistanceSensor claw_sensor_left;
-    private final DistanceSensor claw_sensor_right;
+//    private final DistanceSensor claw_sensor_left;
+//    private final DistanceSensor claw_sensor_right;
 
-    public Intake(Servo claw_left, Servo claw_right, Servo claw_wrist, DistanceSensor claw_sensor_left, DistanceSensor claw_sensor_right) {
+    public Intake(Servo claw_left, Servo claw_right, Servo claw_wrist/*, DistanceSensor claw_sensor_left, DistanceSensor claw_sensor_right*/) {
         this.claw_left = claw_left;
         this.claw_right = claw_right;
         this.claw_wrist = claw_wrist;
-        this.claw_sensor_left = claw_sensor_left;
-        this.claw_sensor_right = claw_sensor_right;
+//        this.claw_sensor_left = claw_sensor_left;
+//        this.claw_sensor_right = claw_sensor_right;
     }
 
     public void setLeftPosition(double pos) {
@@ -48,12 +48,12 @@ public class Intake {
         return claw_wrist.getPosition();
     }
 
-    public double getLeftDistance() {
-        return claw_sensor_left.getDistance(DistanceUnit.MM);
-    }
-
-    public double getRightDistance() {
-        return claw_sensor_right.getDistance(DistanceUnit.MM);
-    }
+//    public double getLeftDistance() {
+//        return claw_sensor_left.getDistance(DistanceUnit.MM);
+//    }
+//
+//    public double getRightDistance() {
+//        return claw_sensor_right.getDistance(DistanceUnit.MM);
+//    }
 
 }

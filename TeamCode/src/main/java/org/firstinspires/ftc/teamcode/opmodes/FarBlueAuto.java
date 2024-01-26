@@ -16,12 +16,15 @@ import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.navigation.Odometry;
 import org.firstinspires.ftc.teamcode.util.Logger;
 import org.firstinspires.ftc.teamcode.util.LoopTimer;
+import org.firstinspires.ftc.teamcode.vision.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.vision.ColorPipeline;
+import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.lang.annotation.ElementType;
+import java.util.ArrayList;
 
 @Config
 @Autonomous(name = "!! FAR Blue Auto !!")
@@ -40,7 +43,7 @@ public class FarBlueAuto extends LoggingOpMode{
     private double lift_power = 0;
 
     private OpenCvCamera camera;
-    private ColorPipeline pipeline;
+    private ColorPipeline color_pipeline;
 
     private Servo pixel_dragger;
     private Servo pixel_dropper;
@@ -48,6 +51,11 @@ public class FarBlueAuto extends LoggingOpMode{
     private FtcDashboard dashboard;
 
     private final Logger log = new Logger("Far Blue Auto");
+
+    public static int x1 = 430;
+    public static int y1 = 320;
+    public static int x2 = 20;
+    public static int y2 = 380;
 
     ElapsedTime timer = new ElapsedTime();
 
@@ -69,13 +77,13 @@ public class FarBlueAuto extends LoggingOpMode{
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-        pipeline = new ColorPipeline(430,320,20,380,"far blue");
+        color_pipeline = new ColorPipeline(360,240,10,240,"far blue");
 
-        camera.setPipeline(pipeline);
+        camera.setPipeline(color_pipeline);
 
-//        pixel_dragger = hardwareMap.get(Servo.class, "pixel dragger");
-//        pixel_dropper = hardwareMap.get(Servo.class, "pixel dropper");
-        ;
+        pixel_dragger = hardwareMap.get(Servo.class, "pixel dragger");
+        pixel_dropper = hardwareMap.get(Servo.class, "pixel dropper");
+
 
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
@@ -102,10 +110,10 @@ public class FarBlueAuto extends LoggingOpMode{
         odometry.resetEncoders();
         drivetrain.resetEncoders();
 
-        result = pipeline.getLocation();
+        result = color_pipeline.getLocation();
 
         telemetry.addData("Result", result);
-        telemetry.addData("color", pipeline.getColorValue());
+        telemetry.addData("color", color_pipeline.getColorValue());
         telemetry.update();
     }
 
@@ -115,8 +123,8 @@ public class FarBlueAuto extends LoggingOpMode{
 //        lift.resetEncoders();
         odometry.resetEncoders();
         drivetrain.resetEncoders();
+        pixel_dragger.setPosition(0.508);
         camera.closeCameraDevice();
-//        drivetrain.setPixelHolderPosition(0.807);
     }
 
     @Override
@@ -130,32 +138,131 @@ public class FarBlueAuto extends LoggingOpMode{
         if (result.equals("center")) {
             switch (main_id) {
                 case 0:
-                    drivetrain.autoMove(31, -2, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(31, 3, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                    if (drivetrain.hasReached()) {
+                        main_id += 1;
+                        pixel_dragger.setPosition(0.334);
+                        timer.reset();
+                    }
+                    break;
+                case 1:
+                    if (timer.seconds() > 1.20) {
+                        drivetrain.autoMove(20, 3, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                        if (drivetrain.hasReached()) {
+                            main_id += 1;
+                        }
+                    }
+                    break;
+                case 2:
+                    drivetrain.autoMove(20, 25, 0, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
-                case 1:
-                    drivetrain.autoMove(20, -2, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                case 3:
+                    drivetrain.autoMove(46, 25, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                    if (drivetrain.hasReached()) {
+                        main_id += 1;
+                    }
+                    break;
+                case 4:
+                    drivetrain.autoMove(46, 10, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                    if (drivetrain.hasReached()) {
+                        main_id += 1;
+                    }
+                    break;
+                case 5:
+                    drivetrain.autoMove(46, -71, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                    if (drivetrain.hasReached()) {
+                        main_id += 1;
+                    }
+                    break;
+                case 6:
+                    drivetrain.autoMove(29, -88.9, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                    if (drivetrain.hasReached()) {
+                        main_id += 1;
+                        pixel_dropper.setPosition(0.648);
+                        timer.reset();
+                    }
+                    break;
+                case 7:
+                    if (timer.seconds() > 3) {
+                        drivetrain.autoMove(46, -85, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                        if (drivetrain.hasReached()) {
+                            main_id += 1;
+                        }
+                    }
+                    break;
+                case 8:
+                    drivetrain.autoMove(46, -89, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                    if (drivetrain.hasReached()) {
+                        main_id += 1;
+                    }
                     break;
             }
         }
         if (result.equals("right")) {
             switch (main_id) {
                 case 0:
-                    drivetrain.autoMove(21.19, 12, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(21.5, 12, 0, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
-                        timer.reset();
-//                        drivetrain.setPixelHolderPosition(0.696);
                     }
                     break;
                 case 1:
+                    drivetrain.autoMove(20, 12, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                    if (drivetrain.hasReached()) {
+                        main_id += 1;
+                        timer.reset();
+                        pixel_dragger.setPosition(0.334);
+                    }
+                    break;
+                case 2:
                     if (timer.seconds() > 2) {
-                        drivetrain.autoMove(18, 25, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                        drivetrain.autoMove(19, 24.5, 0, 0.5, 0.5, 2, odometryPose, telemetry);
                         if (drivetrain.hasReached()) {
                             main_id += 1;
                         }
+                    }
+                    break;
+                case 3:
+                    drivetrain.autoMove(46, 24.5, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                    if (drivetrain.hasReached()) {
+                        main_id += 1;
+                    }
+                    break;
+                case 4:
+                    drivetrain.autoMove(46, 10, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                    if (drivetrain.hasReached()) {
+                        main_id += 1;
+                    }
+                    break;
+                case 5:
+                    drivetrain.autoMove(46, -71, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                    if (drivetrain.hasReached()) {
+                        main_id += 1;
+                    }
+                    break;
+                case 6:
+                    drivetrain.autoMove(33, -88.9, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                    if (drivetrain.hasReached()) {
+                        main_id += 1;
+                        pixel_dropper.setPosition(0.648);
+                        timer.reset();
+                    }
+                    break;
+                case 7:
+                    if (timer.seconds() > 3) {
+                        drivetrain.autoMove(46, -85, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                        if (drivetrain.hasReached()) {
+                            main_id += 1;
+                        }
+                    }
+                    break;
+                case 8:
+                    drivetrain.autoMove(46, -89, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                    if (drivetrain.hasReached()) {
+                        main_id += 1;
                     }
                     break;
             }
@@ -169,21 +276,25 @@ public class FarBlueAuto extends LoggingOpMode{
                     }
                     break;
                 case 1:
-                    drivetrain.autoMove(32, 9.784, 270, 0.8, 0.8, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(26, 9.784, 270, 0.8, 0.8, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
                     break;
                 case 2:
-                    drivetrain.autoMove(31.7, 0.215, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(26, -3.8, 270, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
+                        pixel_dragger.setPosition(0.334);
+                        timer.reset();
                     }
                     break;
                 case 3:
-                    drivetrain.autoMove(31, 10, 270, 0.5, 0.5, 2, odometryPose, telemetry);
-                    if (drivetrain.hasReached()) {
-                        main_id += 1;
+                    if (timer.seconds() > 1.2) {
+                        drivetrain.autoMove(26, 10, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                        if (drivetrain.hasReached()) {
+                            main_id += 1;
+                        }
                     }
                     break;
                 case 4:
@@ -194,6 +305,28 @@ public class FarBlueAuto extends LoggingOpMode{
                     break;
                 case 5:
                     drivetrain.autoMove(46, -71, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                    if (drivetrain.hasReached()) {
+                        main_id += 1;
+                    }
+                    break;
+                case 6:
+                    drivetrain.autoMove(24.55, -88.9, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                    if (drivetrain.hasReached()) {
+                        main_id += 1;
+                        pixel_dropper.setPosition(0.648);
+                        timer.reset();
+                    }
+                    break;
+                case 7:
+                    if (timer.seconds() > 3) {
+                        drivetrain.autoMove(46, -85, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                        if (drivetrain.hasReached()) {
+                            main_id += 1;
+                        }
+                    }
+                    break;
+                case 8:
+                    drivetrain.autoMove(46, -89, 270, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                     }
@@ -220,5 +353,10 @@ public class FarBlueAuto extends LoggingOpMode{
 
         LoopTimer.resetTimer();
 
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
     }
 }

@@ -10,6 +10,8 @@ public class Arm {
     public Arm (Servo arm_left, Servo arm_right) {
         this.arm_left = arm_left;
         this.arm_right = arm_right;
+
+        arm_left.setDirection(Servo.Direction.REVERSE);
     }
 
     public void setPosition(double pos) {

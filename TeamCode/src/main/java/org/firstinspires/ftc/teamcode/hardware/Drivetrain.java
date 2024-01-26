@@ -33,13 +33,13 @@ public class Drivetrain {
     private final BNO055IMU imu;
     private boolean has_reached;
 
-    public static double forward_kp = 0.074;
-    public static double forward_ki = 0.0450;
-    public static double forward_kd = 0.013;
+    public static double forward_kp = 0.077;
+    public static double forward_ki = 0.05;
+    public static double forward_kd = 0.011;
     public static double forward_a = 0.8;
-    public static double strafe_kp = 0.074; //71
-    public static double strafe_ki = 0.0450; //3
-    public static double strafe_kd = 0.013;
+    public static double strafe_kp = 0.077; //71
+    public static double strafe_ki = 0.05; //3
+    public static double strafe_kd = 0.011;
     public static double strafe_a = 0.8;
     public static double turn_kp = 0.0075;
     public static double turn_ki = 0.125;

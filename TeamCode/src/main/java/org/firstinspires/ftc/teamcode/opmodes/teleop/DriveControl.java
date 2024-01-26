@@ -1,18 +1,27 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
 import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.arcrobotics.ftclib.geometry.Rotation2d;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.navigation.Odometry;
 import org.firstinspires.ftc.teamcode.hardware.navigation.PID;
 import org.firstinspires.ftc.teamcode.input.ControllerMap;
+import org.firstinspires.ftc.teamcode.vision.AprilTagDetectionPipeline;
+import org.openftc.apriltag.AprilTagDetection;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+
+import java.util.ArrayList;
 
 public class DriveControl extends ControlModule {
 
     private Drivetrain drivetrain;
-//    private Odometry odometry;
+    private Odometry odometry; //TODO
 
     private ControllerMap.AxisEntry ax_drive_strafe;
     private ControllerMap.AxisEntry ax_drive_forward;
@@ -54,23 +63,47 @@ public class DriveControl extends ControlModule {
     private boolean angled_turn = false;
     private double turn_angle = 0;
 
-    public static double turn_kp = 0.01; //was 0.007
+    public static double turn_kp = 0.0075;
     public static double turn_ki = 0.125;
     public static double turn_kd = 0.0028;
     public static double turn_a = 0.8;
     public static double turn_max_i_sum = 1;
     public static double turn_clip = 1;
 
-    private final PID turn_pid = new PID(turn_kp,turn_ki,turn_kd,0.2,turn_max_i_sum,turn_a);
+    private boolean lock_board = false;
+
+    private final PID turn_pid = new PID(turn_kp,turn_ki,turn_kd,0.23,turn_max_i_sum,turn_a);
+
+    public static double strafe_kp = 0.074; //71
+    public static double strafe_ki = 0.0450; //3
+    public static double strafe_kd = 0.013;
+    public static double strafe_a = 0.8;
+
+    private final PID strafe_pid = new PID(strafe_kp,strafe_ki,strafe_kd,0.3,1,strafe_a);
+
 
     public DriveControl(String name) {
         super(name);
     }
 
+    private OpenCvCamera camera;
+    private ArrayList<AprilTagDetection> currentDetections;
+
+    private double fx = 578.272;
+    private double fy = 578.272;
+    private double cx = 402.145;
+    private double cy = 221.506;
+
+    private double tagsize = 0.166;
+
+    private AprilTagDetectionPipeline aprilTagDetectionPipeline;
+
+    private int tag_id;
+
     @Override
     public void initialize(Robot robot, ControllerMap controllerMap, ControlMgr manager) {
         this.drivetrain = robot.drivetrain;
-//        this.odometry = robot.odometry;
+        this.odometry = robot.odometry;
 
         ax_drive_strafe = controllerMap.getAxisMap("drive:stafe_axis", "gamepad1", "left_stick_x");
         ax_drive_forward = controllerMap.getAxisMap("drive:forward_axis", "gamepad1", "left_stick_y");
@@ -78,9 +111,31 @@ public class DriveControl extends ControlModule {
         ax_slow = controllerMap.getAxisMap("drive:slow", "gamepad1", "left_trigger");
 
         reverse_drive = controllerMap.getButtonMap("drive:reverse_drive", "gamepad1","dpad_left");
-        backboard_lock = controllerMap.getButtonMap("drive:backboard_lock", "gamepad1","left_bumper");
+        backboard_lock = controllerMap.getButtonMap("drive:backboard_lock", "gamepad1","dpad_right");
 
         field_centric_button = controllerMap.getButtonMap("drive:field_centric_button", "gamepad1","dpad_up");
+
+        int cameraMonitorViewId = robot.hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", robot.hardwareMap.appContext.getPackageName());
+        camera = OpenCvCameraFactory.getInstance().createWebcam(robot.hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+        aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
+
+        camera.setPipeline(aprilTagDetectionPipeline);
+
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
+            @Override
+            public void onOpened()
+            {
+                camera.startStreaming(640,480, OpenCvCameraRotation.UPRIGHT);
+            }
+
+            @Override
+            public void onError(int errorCode)
+            {
+
+            }
+        });
+
 
     }
 
@@ -95,15 +150,23 @@ public class DriveControl extends ControlModule {
         drivetrain.updateHeading();
 
         double heading = drivetrain.getHeading();
+        odometry.updatePose(-heading);
+        Pose2d odometryPose = odometry.getPose();
+
+        double slow = 1 - (ax_slow.get() / 3);
+
+        double y = -ax_drive_forward.get() * forward_speed * slow;
+        double x = ax_drive_strafe.get() * strafe_speed * slow;
+        double rx = ax_drive_rotate.get() * turn_speed * slow;
 
         if(reverse_drive.edge() == -1) {
             direction_flip = !direction_flip;
         }
 
-
-        if (Math.abs(ax_drive_rotate.get()) > 0.05) {
-            angled_turn = false;
+        if(backboard_lock.edge() == -1) {
+            lock_board = !lock_board;
         }
+
 
         if (field_centric_button.edge() == -1) {
             field_centric = !field_centric;
@@ -130,12 +193,6 @@ public class DriveControl extends ControlModule {
 //            target_heading += (heading_unwrapped - target_heading) * 0.5;
 //        }
 
-        double slow = 1 - (ax_slow.get() / 3);
-
-        double y = -ax_drive_forward.get() * forward_speed * slow;
-        double x = ax_drive_strafe.get() * strafe_speed * slow;
-        double rx = ax_drive_rotate.get() * turn_speed * slow;
-
         //this makes turning slower as lateral motion gets faster
         rx *= (1 - (Math.sqrt(Math.pow(ax_drive_forward.get(), 2) + Math.pow(ax_drive_strafe.get() * 0.8, 2)) * speed_dependent_steering)); //pythagorean theorem
 
@@ -160,16 +217,26 @@ public class DriveControl extends ControlModule {
 
         rot %= 360;
 
-        if (Math.abs(turn_angle - rot) > Math.abs(turn_angle - (rot-360))) {
-            rot -= 360;
+        double heading_radians = Math.toRadians(heading);
+
+        if (lock_board) {
+            double y_lock = strafe_pid.getOutPut(1,odometryPose.getX(),0);
+            double rotY = x * Math.sin(-heading_radians) + y_lock * Math.cos(-heading_radians);
+            double turn_power = 0;
+            if(tag_id == 2) {
+                turn_power = turn_pid.getOutPut(270, rot, 0);
+            }
+            if (tag_id == 5) {
+                turn_power = turn_pid.getOutPut(90, rot, 0);
+            }
+
+            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rot), 1);
+            drivetrain.move(rotY, x, turn_power, (heading_delta * 0), denominator);
         }
-        if (angled_turn) {
-            rx = turn_pid.getOutPut(turn_angle, rot, 0);
-        }
+
 //        rx = t
 //        target_heading += rx * 11;
 
-        double heading_radians = Math.toRadians(heading);
 
         double rotX = x * Math.cos(-heading_radians) - y * Math.sin(-heading_radians);
         double rotY = x * Math.sin(-heading_radians) + y * Math.cos(-heading_radians);
@@ -208,11 +275,24 @@ public class DriveControl extends ControlModule {
 //
         telemetry.addData("Field Centric",field_centric);
 
+        currentDetections = aprilTagDetectionPipeline.getLatestDetections();
+        if(currentDetections.size() != 0) {
+            for (AprilTagDetection tag : currentDetections){
+                if (tag.id == 2 || tag.id == 5) {
+                    tag_id = tag.id;
+                    Pose2d lock_pose = new Pose2d(tag.pose.y,tag.pose.x, new Rotation2d(0));
+                    odometry.updatePose(lock_pose);
+                    telemetry.addData("Tag", tag.id);
+                }
+            }
+        }
 
+        telemetry.update();
     }
     @Override
     public void stop() {
         super.stop();
         // drivetrain.closeIMU();
+        camera.closeCameraDevice();
     }
 }

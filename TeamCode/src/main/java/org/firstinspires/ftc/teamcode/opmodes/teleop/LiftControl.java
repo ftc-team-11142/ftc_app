@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -7,6 +8,7 @@ import org.firstinspires.ftc.teamcode.hardware.Lift;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.input.ControllerMap;
 
+@Config
 public class LiftControl extends ControlModule{
 
     private Lift lift;
@@ -23,9 +25,17 @@ public class LiftControl extends ControlModule{
 
     private String previous_state = "lift_down";
 
+    private double lift_target = 0;
+    private double lift_power = 0;
+
     public LiftControl(String name) {
         super(name);
     }
+
+    public static double high_lift = 0;
+    public static double mid_lift = 0;
+    public static double down_lift = 0;
+    public static double lift_down_delay = 1.8;
 
     @Override
     public void initialize(Robot robot, ControllerMap controllerMap, ControlMgr manager) {
@@ -34,13 +44,15 @@ public class LiftControl extends ControlModule{
         lift_high_button = controllerMap.getButtonMap("lift:high", "gamepad2", "y");
         lift_mid_button = controllerMap.getButtonMap("lift:mid", "gamepad2", "b");
         lift_down_button = controllerMap.getButtonMap("lift:down", "gamepad2", "a");
+
+        lift.resetEncoders();
     }
 
     @Override
     public void update(Telemetry telemetry) {
 
-        double lift_postion_sum = lift.getLeftPosition() + ax_lift.get();
-        lift.setPosition(lift_postion_sum);
+
+        lift_target -= ax_lift.get();
 
         if (lift_high_button.edge() == -1) {
             if (lift_mid) {
@@ -85,21 +97,28 @@ public class LiftControl extends ControlModule{
 
         if (lift_high) {
 //            if ( TODO Sequencing
-            lift.setPosition(0);
+            lift_target = high_lift;
         }
 
         if (lift_mid) {
-            lift.setPosition(0);
+            lift_target = mid_lift;
         }
 
         if (lift_down) {
-            if (sequencing_timer.seconds() > 1.8) {
-                lift.setPosition(0);
+            if (sequencing_timer.seconds() > lift_down_delay) {
+                lift_target = down_lift;
             }
         }
 
-        telemetry.addData("Arm Left", lift.getLeftPosition());
-        telemetry.addData("Arm Right", lift.getRightPosition());
+        lift_power = (lift_target - lift.getPosition()) * 0.03;
+        if (Math.abs(lift_target - lift.getPosition()) > 20) {
+            lift.setPower(lift_power);
+        }
+        else {
+            lift.setPower(0);
+        }
+
+        telemetry.addData("Lift", lift.getPosition());
         telemetry.update();
 
     }

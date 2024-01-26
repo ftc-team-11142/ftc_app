@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -7,6 +8,7 @@ import org.firstinspires.ftc.teamcode.hardware.Intake;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.input.ControllerMap;
 
+@Config //TODO
 public class IntakeControl extends ControlModule{
 
     private Intake intake;
@@ -28,11 +30,16 @@ public class IntakeControl extends ControlModule{
         super(name);
     }
 
+    public static double mid_wrist = 0.4;
+    public static double high_wrist = 0.4;
+    public static double high_delay_wrist = 1.8;
+    public static double mid_delay_wrist = 1.8;
+
 
     @Override
     public void initialize(Robot robot, ControllerMap controllerMap, ControlMgr manager) {
         this.intake = robot.intake;
-        intake_button = controllerMap.getButtonMap("intake:claw", "gamepad1","right_bumper");
+        intake_button = controllerMap.getButtonMap("intake:claw", "gamepad1","x");
         claw_high_button = controllerMap.getButtonMap("claw:high", "gamepad2", "y");
         claw_mid_button = controllerMap.getButtonMap("claw:mid", "gamepad2", "b");
         claw_down_button = controllerMap.getButtonMap("claw:down", "gamepad2", "a");
@@ -45,12 +52,12 @@ public class IntakeControl extends ControlModule{
         }
 
         if (claw_open) {
-            intake.setLeftPosition(0.75);
-            intake.setRightPosition(0.25);
+            intake.setLeftPosition(0.2);
+            intake.setRightPosition(0.80);
         }
         else {
-            intake.setLeftPosition(1);
-            intake.setRightPosition(0.0);
+            intake.setLeftPosition(0.0);
+            intake.setRightPosition(1);
         }
 
         if (claw_high_button.edge() == -1) {
@@ -105,25 +112,25 @@ public class IntakeControl extends ControlModule{
         }
 
         if (claw_high) {
-            if ((sequencing_timer.seconds() > 1.8) && previous_state.equals("claw_down")) { //TODO sequencing delays based of servo stuff
-                intake.setWristPosition(0);
+            if ((sequencing_timer.seconds() > high_delay_wrist) && previous_state.equals("claw_down")) { //TODO sequencing delays based of servo stuff
+                intake.setWristPosition(high_wrist);
             }
             else {
-                intake.setWristPosition(0);
+                intake.setWristPosition(high_wrist);
             }
         }
 
         if (claw_mid) {
-            if ((sequencing_timer.seconds() > 1.8) && previous_state.equals("claw_down")) {
-                intake.setWristPosition(0);
+            if ((sequencing_timer.seconds() > mid_delay_wrist) && previous_state.equals("claw_down")) {
+                intake.setWristPosition(mid_wrist);
             }
             else {
-                intake.setWristPosition(0);
+                intake.setWristPosition(mid_wrist);
             }
         }
 
         if (claw_down) {
-                intake.setWristPosition(0);
+                intake.setWristPosition(0.92);
         }
 
     }

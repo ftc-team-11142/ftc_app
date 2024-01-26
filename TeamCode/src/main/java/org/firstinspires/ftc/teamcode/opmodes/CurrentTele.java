@@ -8,8 +8,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.input.ControllerMap;
+import org.firstinspires.ftc.teamcode.opmodes.teleop.ArmControl;
 import org.firstinspires.ftc.teamcode.opmodes.teleop.ControlMgr;
 import org.firstinspires.ftc.teamcode.opmodes.teleop.DriveControl;
+import org.firstinspires.ftc.teamcode.opmodes.teleop.DroneControl;
 import org.firstinspires.ftc.teamcode.opmodes.teleop.HangerControl;
 import org.firstinspires.ftc.teamcode.opmodes.teleop.IntakeControl;
 import org.firstinspires.ftc.teamcode.opmodes.teleop.LiftControl;
@@ -51,9 +53,11 @@ public class CurrentTele extends LoggingOpMode
 
         // Controller Modules
         controlMgr.addModule(new DriveControl("Drive Control"));
-//        controlMgr.addModule(new IntakeControl("Intake Control"));
-//        controlMgr.addModule(new LiftControl("Lift Control"));
-//        controlMgr.addModule(new HangerControl("Hanger Control"));
+        controlMgr.addModule(new IntakeControl("Intake Control"));
+        controlMgr.addModule(new LiftControl("Lift Control"));
+        controlMgr.addModule(new HangerControl("Hanger Control"));
+        controlMgr.addModule(new ArmControl("Arm Control"));
+//        controlMgr.addModule(new DroneControl("Drone Control"));
 
         controlMgr.initModules();
 

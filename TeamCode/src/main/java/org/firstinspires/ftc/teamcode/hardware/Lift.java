@@ -9,26 +9,25 @@ import org.tensorflow.lite.annotations.UsedByReflection;
 
 public class Lift {
 
-    private final Servo lift_left;
-    private final Servo lift_right;
+    private final DcMotorEx lift;
 
 
-    public Lift(Servo lift_left,Servo lift_right) {
-        this.lift_left = lift_left;
-        this.lift_right = lift_right;
+    public Lift(DcMotorEx lift) {
+        this.lift = lift;
     }
 
-    public double getLeftPosition() {
-        return lift_left.getPosition();
+    public void resetEncoders() {
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public double getRightPosition() {
-        return lift_right.getPosition();
+    public double getPosition() {
+        return lift.getCurrentPosition();
     }
 
-    public void setPosition(double pos) {
-        lift_left.setPosition(pos);
-        lift_right.setPosition(pos);
+    public void setPower(double pow) {
+        lift.setPower(pow);
     }
 
 }
