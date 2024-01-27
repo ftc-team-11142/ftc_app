@@ -66,6 +66,7 @@ public class CurrentTele extends LoggingOpMode
     @Override
     public void init_loop()
     {
+        controlMgr.init_loop(telemetry);
     }
 
     @Override

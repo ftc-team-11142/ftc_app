@@ -43,6 +43,15 @@ public class IntakeControl extends ControlModule{
         claw_high_button = controllerMap.getButtonMap("claw:high", "gamepad2", "y");
         claw_mid_button = controllerMap.getButtonMap("claw:mid", "gamepad2", "b");
         claw_down_button = controllerMap.getButtonMap("claw:down", "gamepad2", "a");
+        sequencing_timer.reset();
+    }
+
+    @Override
+    public void init_loop(Telemetry telemetry) {
+        super.init_loop(telemetry);
+        if (sequencing_timer.seconds() > 1) {
+            intake.setWristPosition(0.958);
+        }
     }
 
     @Override
@@ -52,11 +61,11 @@ public class IntakeControl extends ControlModule{
         }
 
         if (claw_open) {
-            intake.setLeftPosition(0.2);
+            intake.setLeftPosition(0.42);
             intake.setRightPosition(0.80);
         }
         else {
-            intake.setLeftPosition(0.0);
+            intake.setLeftPosition(0.32);
             intake.setRightPosition(1);
         }
 

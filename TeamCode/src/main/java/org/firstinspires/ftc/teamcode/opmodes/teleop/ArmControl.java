@@ -43,6 +43,19 @@ public class ArmControl extends ControlModule{
         arm_high_button = controllerMap.getButtonMap("arm:high", "gamepad2", "y");
         arm_mid_button = controllerMap.getButtonMap("arm:mid", "gamepad2", "b");
         arm_down_button = controllerMap.getButtonMap("arm:down", "gamepad2", "a");
+
+        sequencing_timer.reset();
+    }
+
+    @Override
+    public void init_loop(Telemetry telemetry) {
+        super.init_loop(telemetry);
+        if (sequencing_timer.seconds() < 1) {
+            arm.setPosition(0);
+        }
+        else {
+            arm.setPosition(0.041);
+        }
     }
 
     @Override

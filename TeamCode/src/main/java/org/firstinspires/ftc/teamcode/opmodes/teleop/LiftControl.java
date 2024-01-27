@@ -46,6 +46,12 @@ public class LiftControl extends ControlModule{
         lift_down_button = controllerMap.getButtonMap("lift:down", "gamepad2", "a");
 
         lift.resetEncoders();
+        sequencing_timer.reset();
+    }
+
+    @Override
+    public void init_loop(Telemetry telemetry) {
+        super.init_loop(telemetry);
     }
 
     @Override
