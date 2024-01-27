@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.opmodes.test;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.CRServoImpl;
@@ -7,6 +10,7 @@ import com.qualcomm.robotcore.hardware.CRServoImplEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
@@ -19,6 +23,7 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
 import java.io.Serializable;
 
+@Config
 @TeleOp(name = "Lift Test")
 public class LiftTest extends LoggingOpMode {
 
@@ -33,11 +38,19 @@ public class LiftTest extends LoggingOpMode {
     private DcMotorEx hanger_left;
     private DcMotorEx hanger_right;
     private double sum = 0;
+    private double lift_power = 0;
+    private double lift_target = 0;
+    private FtcDashboard dashboard;
+
+    public static double kp = 0.03;
+
+    private ElapsedTime timer = new ElapsedTime();
 
     @Override
     public void init() {
         super.init();
         Robot robot = Robot.initialize(hardwareMap);
+
         arm_left = hardwareMap.get(Servo.class, "arm left");
         arm_right = hardwareMap.get(Servo.class, "arm right");
 
@@ -55,6 +68,9 @@ public class LiftTest extends LoggingOpMode {
 
         arm_left.setDirection(Servo.Direction.REVERSE);
 //        arm_right.setDirection(Servo.Direction.FORWARD);
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
+        dashboard = FtcDashboard.getInstance();
     }
 
     @Override
@@ -65,14 +81,19 @@ public class LiftTest extends LoggingOpMode {
     @Override
     public void start() {
         super.start();
-        claw_wrist.setPosition(0.92);
+//        claw_wrist.setPosition(0.92);
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        timer.reset();
     }
 
     @Override
     public void loop() {
+
+        if (timer.seconds() > 8) {
+            lift_target = 1300;
+        }
 
         if (gamepad1.a) {
             claw_left.setPosition(0.2);
@@ -91,12 +112,22 @@ public class LiftTest extends LoggingOpMode {
         }
 
         sum = sum - gamepad1.right_stick_y*0.001;
-        lift.setPower(-gamepad1.left_stick_y);
         arm_right.setPosition(sum);
         arm_left.setPosition(sum);
+
+        lift.setPower(-gamepad1.left_stick_y);
+//        lift_power = (lift_target - lift.getCurrentPosition()) * kp;
+//        if (Math.abs(lift_target - lift.getCurrentPosition()) > 20) {
+//            lift.setPower(lift_power);
+//        }
+//        else {
+//            lift.setPower(0);
+//        }
+
 //        arm_right.setPosition(sum);
         telemetry.addData("Lift Power", lift.getPower());
-        telemetry.addData("Lift Position", lift.getCurrentPosition());
+        telemetry.addData("Lift Encoder", lift.getCurrentPosition());
+        telemetry.addData("Lift Target", lift_target);
         telemetry.addData("wrist Position", claw_wrist.getPosition());
         telemetry.addData("Arm Position", sum);
         telemetry.addData("Loop Time: ", LoopTimer.getLoopTime());

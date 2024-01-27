@@ -23,6 +23,7 @@ public class ColorPipeline extends OpenCvPipeline {
     private String side;
     String location = "left";
     String color = "";
+    String color_2 = "";
     String hsv_color = "";
     String hsv_color_2 = "";
 
@@ -98,6 +99,7 @@ public class ColorPipeline extends OpenCvPipeline {
 
 
         color = Arrays.toString(input.get(y1,x1));
+        color_2 = Arrays.toString(input.get(y2,x2));
 
         hsv_color = Arrays.toString(hsv.get(y1,x1));
         hsv_color_2 = Arrays.toString(hsv.get(y2,x2));
@@ -109,6 +111,9 @@ public class ColorPipeline extends OpenCvPipeline {
     }
     public String getColorValue() {
         return this.color;
+    }
+    public String getColorValue2() {
+        return this.color_2;
     }
     public String getColorHSVValue() {
         return this.hsv_color;
