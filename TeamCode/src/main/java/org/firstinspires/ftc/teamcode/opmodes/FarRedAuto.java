@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.hardware.Arm;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
@@ -32,6 +33,7 @@ public class FarRedAuto extends LoggingOpMode{
     private Drivetrain drivetrain;
     private Lift lift;
     private Odometry odometry;
+    private Arm arm;
 
     private boolean stop = false;
 
@@ -64,8 +66,9 @@ public class FarRedAuto extends LoggingOpMode{
         super.init();
         Robot robot = Robot.initialize(hardwareMap);
         drivetrain = robot.drivetrain;
-//        lift = robot.lift;
+        lift = robot.lift;
         odometry = robot.odometry;
+        arm = robot.arm;
 
         Pose2d start_pose = new Pose2d(0,0,new Rotation2d(Math.toRadians(0.1)));
         odometry.updatePose(start_pose);
@@ -144,6 +147,7 @@ public class FarRedAuto extends LoggingOpMode{
                         main_id += 1;
                         pixel_dragger.setPosition(0.334);
                         timer.reset();
+                        arm.setPosition(0);
                     }
                     break;
                 case 1:
@@ -170,9 +174,11 @@ public class FarRedAuto extends LoggingOpMode{
                     }
                     break;
                 case 4:
-                    drivetrain.autoMove(48, -10, 90, 0.5, 0.5, 2, odometryPose, telemetry);
-                    if (drivetrain.hasReached() || timer.seconds() > 2.2) {
-                        main_id += 1;
+                    if (timer.seconds() > 4) {
+                        drivetrain.autoMove(48, -10, 90, 0.5, 0.5, 2, odometryPose, telemetry);
+                        if (drivetrain.hasReached() || timer.seconds() > 6.2) {
+                            main_id += 1;
+                        }
                     }
                     break;
                 case 5:
@@ -221,6 +227,7 @@ public class FarRedAuto extends LoggingOpMode{
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                         timer.reset();
+                        arm.setPosition(0);
                     }
                     break;
                 case 1:
@@ -248,9 +255,11 @@ public class FarRedAuto extends LoggingOpMode{
                     }
                     break;
                 case 4:
-                    drivetrain.autoMove(48, -10, 90, 0.5, 0.5, 2, odometryPose, telemetry);
-                    if (drivetrain.hasReached() || timer.seconds() > 2.2) {
-                        main_id += 1;
+                    if (timer.seconds() > 4) {
+                        drivetrain.autoMove(48, -10, 90, 0.5, 0.5, 2, odometryPose, telemetry);
+                        if (drivetrain.hasReached() || timer.seconds() > 6.2) {
+                            main_id += 1;
+                        }
                     }
                     break;
                 case 5:
@@ -298,12 +307,16 @@ public class FarRedAuto extends LoggingOpMode{
                     drivetrain.autoMove(28.25, -5.387, 0, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
+                        arm.setPosition(0);
+                        timer.reset();
                     }
                     break;
                 case 1:
-                    drivetrain.autoMove(26, -9.784, 90, 0.8, 0.8, 2, odometryPose, telemetry);
-                    if (drivetrain.hasReached()) {
-                        main_id += 1;
+                    if (timer.seconds() > 4) {
+                        drivetrain.autoMove(26, -9.784, 90, 0.8, 0.8, 2, odometryPose, telemetry);
+                        if (drivetrain.hasReached()) {
+                            main_id += 1;
+                        }
                     }
                     break;
                 case 2:
@@ -376,7 +389,7 @@ public class FarRedAuto extends LoggingOpMode{
 //        else {
 //            lift.setPower(0);
 //        }
-
+        arm.update();
         drivetrain.update(odometryPose, telemetry,false, main_id, false, false,0);
 
 //        telemetry.addData("Lift Position", lift.getLiftPosition());

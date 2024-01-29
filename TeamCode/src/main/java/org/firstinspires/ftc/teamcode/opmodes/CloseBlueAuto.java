@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.hardware.Arm;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
@@ -32,6 +33,7 @@ public class CloseBlueAuto extends LoggingOpMode{
     private Drivetrain drivetrain;
     private Lift lift;
     private Odometry odometry;
+    private Arm arm;
 
     private boolean stop = false;
 
@@ -64,8 +66,9 @@ public class CloseBlueAuto extends LoggingOpMode{
         super.init();
         Robot robot = Robot.initialize(hardwareMap);
         drivetrain = robot.drivetrain;
-//        lift = robot.lift;
+        lift = robot.lift;
         odometry = robot.odometry;
+        arm = robot.arm;
 
         Pose2d start_pose = new Pose2d(0,0,new Rotation2d(Math.toRadians(0.1)));
         odometry.updatePose(start_pose);
@@ -106,7 +109,7 @@ public class CloseBlueAuto extends LoggingOpMode{
     public void init_loop() {
         super.init_loop();
 
-//        lift.resetEncoders();
+        lift.resetEncoders();
         odometry.resetEncoders();
         drivetrain.resetEncoders();
 
@@ -121,7 +124,7 @@ public class CloseBlueAuto extends LoggingOpMode{
     @Override
     public void start() {
         super.start();
-        lift.resetEncoders();
+//        lift.resetEncoders();
         odometry.resetEncoders();
         drivetrain.resetEncoders();
         pixel_dragger.setPosition(0.508);
@@ -143,6 +146,7 @@ public class CloseBlueAuto extends LoggingOpMode{
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                         pixel_dragger.setPosition(0.334);
+                        arm.setPosition(0);
                         timer.reset();
                     }
                     break;
@@ -200,6 +204,7 @@ public class CloseBlueAuto extends LoggingOpMode{
                     drivetrain.autoMove(21.5, -16, 0, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
+                        arm.setPosition(0);
                     }
                     break;
                 case 1:
@@ -257,6 +262,7 @@ public class CloseBlueAuto extends LoggingOpMode{
                     drivetrain.autoMove(28.25, -5.387, 0, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
+                        arm.setPosition(0);
                     }
                     break;
                 case 1:
@@ -322,7 +328,7 @@ public class CloseBlueAuto extends LoggingOpMode{
 //        else {
 //            lift.setPower(0);
 //        }
-
+        arm.update();
         drivetrain.update(odometryPose, telemetry,false, main_id, false, false,0);
 
 //        telemetry.addData("Lift Position", lift.getLiftPosition());

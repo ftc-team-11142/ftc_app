@@ -66,6 +66,7 @@ public class Robot {
         Servo claw_right = hardwareMap.get(Servo.class, "claw right");
         Servo claw_left = hardwareMap.get(Servo.class, "claw left");
         Servo claw_wrist = hardwareMap.get(Servo.class, "claw wrist");
+        Servo drone_launcher = hardwareMap.get(Servo.class, "drone launcher");
 //
 //
 //        // Sensors
@@ -80,7 +81,7 @@ public class Robot {
         this.lift = new Lift(lift);
         this.hanger = new Hanger(hanger_left, hanger_right);
         this.arm = new Arm(arm_left,arm_right);
-//        this.drone = new Drone(drone_launcher);
+        this.drone = new Drone(drone_launcher);
         this.odometry = new Odometry(front_right, back_right, front_left,back_left);
         this.hardwareMap = hardwareMap;
     }

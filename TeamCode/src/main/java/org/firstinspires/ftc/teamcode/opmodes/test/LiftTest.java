@@ -38,6 +38,7 @@ public class LiftTest extends LoggingOpMode {
     private DcMotorEx hanger_left;
     private DcMotorEx hanger_right;
     private double sum = 0;
+    private double wrist_sum = 0;
     private double lift_power = 0;
     private double lift_target = 0;
     private FtcDashboard dashboard;
@@ -85,6 +86,7 @@ public class LiftTest extends LoggingOpMode {
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        claw_wrist.setDirection(Servo.Direction.REVERSE);
         timer.reset();
     }
 
@@ -105,11 +107,13 @@ public class LiftTest extends LoggingOpMode {
         }
 
         if(gamepad1.dpad_up) {
-            claw_wrist.setPosition(claw_wrist.getPosition()+0.001);
+            wrist_sum += 0.001;
         }
-        if(gamepad1.dpad_up) {
-            claw_wrist.setPosition(claw_wrist.getPosition()-0.001);
+        if(gamepad1.dpad_down) {
+            wrist_sum -= 0.001;
         }
+
+        claw_wrist.setPosition(wrist_sum);
 
         sum = sum - gamepad1.right_stick_y*0.001;
         arm_right.setPosition(sum);
@@ -130,6 +134,7 @@ public class LiftTest extends LoggingOpMode {
         telemetry.addData("Lift Target", lift_target);
         telemetry.addData("wrist Position", claw_wrist.getPosition());
         telemetry.addData("Arm Position", sum);
+        telemetry.addData("Wrist Sum", wrist_sum);
         telemetry.addData("Loop Time: ", LoopTimer.getLoopTime());
         telemetry.addData("Sum ", sum);
         telemetry.update();

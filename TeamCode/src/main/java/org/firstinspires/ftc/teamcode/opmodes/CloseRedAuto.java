@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.hardware.Arm;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
@@ -32,6 +33,7 @@ public class CloseRedAuto extends LoggingOpMode{
     private Drivetrain drivetrain;
     private Lift lift;
     private Odometry odometry;
+    private Arm arm;
 
     private boolean stop = false;
 
@@ -64,8 +66,9 @@ public class CloseRedAuto extends LoggingOpMode{
         super.init();
         Robot robot = Robot.initialize(hardwareMap);
         drivetrain = robot.drivetrain;
-//        lift = robot.lift;
+        lift = robot.lift;
         odometry = robot.odometry;
+        arm = robot.arm;
 
         Pose2d start_pose = new Pose2d(0,0,new Rotation2d(Math.toRadians(0.1)));
         odometry.updatePose(start_pose);
@@ -142,6 +145,7 @@ public class CloseRedAuto extends LoggingOpMode{
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                         pixel_dragger.setPosition(0.334);
+                        arm.setPosition(0);
                         timer.reset();
                     }
                     break;
@@ -168,7 +172,7 @@ public class CloseRedAuto extends LoggingOpMode{
                     }
                     break;
                 case 4:
-                    drivetrain.autoMove(27, 46.3, 90, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(19, 46.3, 90, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached() || timer.seconds() > 2.2) {
                         main_id += 1;
                         pixel_dropper.setPosition(0.658);
@@ -177,7 +181,7 @@ public class CloseRedAuto extends LoggingOpMode{
                     break;
                 case 5:
                     if (timer.seconds() > 3) {
-                        drivetrain.autoMove(27, 40, 90, 0.5, 0.5, 2, odometryPose, telemetry);
+                        drivetrain.autoMove(19, 40, 90, 0.5, 0.5, 2, odometryPose, telemetry);
                         if (drivetrain.hasReached()) {
                             main_id += 1;
                             timer.reset();
@@ -185,7 +189,7 @@ public class CloseRedAuto extends LoggingOpMode{
                     }
                     break;
                 case 6:
-                    drivetrain.autoMove(46, 46, 90, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(48, 44, 90, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached() || timer.seconds() > 2.2) {
                         main_id += 1;
                         pixel_dropper.setPosition(0.03);
@@ -199,6 +203,7 @@ public class CloseRedAuto extends LoggingOpMode{
                     drivetrain.autoMove(21.5, 12, 0, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
+                        arm.setPosition(0);
                     }
                     break;
                 case 1:
@@ -219,13 +224,13 @@ public class CloseRedAuto extends LoggingOpMode{
                     }
                     break;
                 case 3:
-                    drivetrain.autoMove(19.15, 20, 90, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(13, 20, 90, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached() || timer.seconds() > 1.3) {
                         main_id += 1;
                     }
                     break;
                 case 4:
-                    drivetrain.autoMove(19.15, 46.3, 90, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(13, 46.3, 90, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                         pixel_dropper.setPosition(0.658);
@@ -234,7 +239,7 @@ public class CloseRedAuto extends LoggingOpMode{
                     break;
                 case 5:
                     if (timer.seconds() > 3) {
-                        drivetrain.autoMove(19.15, 40, 90, 0.5, 0.5, 2, odometryPose, telemetry);
+                        drivetrain.autoMove(13, 40, 90, 0.5, 0.5, 2, odometryPose, telemetry);
                         if (drivetrain.hasReached()) {
                             main_id += 1;
                             timer.reset();
@@ -242,7 +247,7 @@ public class CloseRedAuto extends LoggingOpMode{
                     }
                     break;
                 case 6:
-                    drivetrain.autoMove(46, 46, 90, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(48, 44, 90, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached() || timer.seconds() > 2.2) {
                         main_id += 1;
                         pixel_dropper.setPosition(0.03);
@@ -256,6 +261,7 @@ public class CloseRedAuto extends LoggingOpMode{
                     drivetrain.autoMove(28.25, 5.387, 0, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
+                        arm.setPosition(0);
                     }
                     break;
                 case 1:
@@ -281,14 +287,14 @@ public class CloseRedAuto extends LoggingOpMode{
                     }
                     break;
                 case 4:
-                    drivetrain.autoMove(35.4, 20, 90, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(28, 20, 90, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                         timer.reset();
                     }
                     break;
                 case 5:
-                    drivetrain.autoMove(35.4, 46.3, 90, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(28, 46.3, 90, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached() || timer.seconds() > 2.2) {
                         main_id += 1;
                         pixel_dropper.setPosition(0.658);
@@ -297,7 +303,7 @@ public class CloseRedAuto extends LoggingOpMode{
                     break;
                 case 6:
                     if (timer.seconds() > 3) {
-                        drivetrain.autoMove(35.4, 40, 90, 0.5, 0.5, 2, odometryPose, telemetry);
+                        drivetrain.autoMove(28, 40, 90, 0.5, 0.5, 2, odometryPose, telemetry);
                         if (drivetrain.hasReached()) {
                             main_id += 1;
                             timer.reset();
@@ -305,7 +311,7 @@ public class CloseRedAuto extends LoggingOpMode{
                     }
                     break;
                 case 7:
-                    drivetrain.autoMove(46, 46, 90, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(48, 44, 90, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached() || timer.seconds() > 2.2) {
                         main_id += 1;
                         pixel_dropper.setPosition(0.03);
@@ -321,7 +327,7 @@ public class CloseRedAuto extends LoggingOpMode{
 //        else {
 //            lift.setPower(0);
 //        }
-
+        arm.update();
         drivetrain.update(odometryPose, telemetry,false, main_id, false, false,0);
 
 //        telemetry.addData("Lift Position", lift.getLiftPosition());

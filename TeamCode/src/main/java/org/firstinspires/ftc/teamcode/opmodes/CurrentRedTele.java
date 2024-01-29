@@ -4,25 +4,20 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-//import com.outoftheboxrobotics.photoncore.PhotonCore;
-
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.input.ControllerMap;
-import org.firstinspires.ftc.teamcode.opmodes.teleop.ArmControl;
 import org.firstinspires.ftc.teamcode.opmodes.teleop.ControlMgr;
-import org.firstinspires.ftc.teamcode.opmodes.teleop.DriveControl;
 import org.firstinspires.ftc.teamcode.opmodes.teleop.DroneControl;
 import org.firstinspires.ftc.teamcode.opmodes.teleop.HangerControl;
-import org.firstinspires.ftc.teamcode.opmodes.teleop.IntakeControl;
-import org.firstinspires.ftc.teamcode.opmodes.teleop.LiftControl;
+import org.firstinspires.ftc.teamcode.opmodes.teleop.RedRobotControl;
 import org.firstinspires.ftc.teamcode.util.LoopTimer;
 import org.firstinspires.ftc.teamcode.util.Persistent;
 import org.firstinspires.ftc.teamcode.util.Scheduler;
 import org.firstinspires.ftc.teamcode.util.event.EventBus;
 //import org.opencv.android.OpenCVLoader;
 
-@TeleOp(name = "!!THE TeleOp!!")
-public class CurrentTele extends LoggingOpMode
+@TeleOp(name = "!!'RED' THE TeleOp!!")
+public class CurrentRedTele extends LoggingOpMode
 {
     // Robot and Controller Vars
     private Robot robot;
@@ -52,12 +47,9 @@ public class CurrentTele extends LoggingOpMode
         controlMgr = new ControlMgr(robot, controllerMap);
 
         // Controller Modules
-        controlMgr.addModule(new DriveControl("Drive Control"));
-        controlMgr.addModule(new IntakeControl("Intake Control"));
-        controlMgr.addModule(new LiftControl("Lift Control"));
+        controlMgr.addModule(new RedRobotControl("Red Robot Control"));
         controlMgr.addModule(new HangerControl("Hanger Control"));
-        controlMgr.addModule(new ArmControl("Arm Control"));
-//        controlMgr.addModule(new DroneControl("Drone Control"));
+        controlMgr.addModule(new DroneControl("Drone Control"));
 
         controlMgr.initModules();
 

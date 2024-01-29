@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.hardware.Arm;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
@@ -32,6 +33,7 @@ public class FarBlueAuto extends LoggingOpMode{
     private Drivetrain drivetrain;
     private Lift lift;
     private Odometry odometry;
+    private Arm arm;
 
     private boolean stop = false;
 
@@ -64,8 +66,9 @@ public class FarBlueAuto extends LoggingOpMode{
         super.init();
         Robot robot = Robot.initialize(hardwareMap);
         drivetrain = robot.drivetrain;
-//        lift = robot.lift;
+        lift = robot.lift;
         odometry = robot.odometry;
+        arm = robot.arm;
 
         Pose2d start_pose = new Pose2d(0,0,new Rotation2d(Math.toRadians(0.1)));
         odometry.updatePose(start_pose);
@@ -144,6 +147,7 @@ public class FarBlueAuto extends LoggingOpMode{
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                         pixel_dragger.setPosition(0.334);
+                        arm.setPosition(0);
                         timer.reset();
                     }
                     break;
@@ -182,7 +186,7 @@ public class FarBlueAuto extends LoggingOpMode{
                     }
                     break;
                 case 6:
-                    drivetrain.autoMove(28, -88.9, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(25, -88.9, 270, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached() || timer.seconds() > 2.2) {
                         main_id += 1;
                         pixel_dropper.setPosition(0.67);
@@ -191,7 +195,7 @@ public class FarBlueAuto extends LoggingOpMode{
                     break;
                 case 7:
                     if (timer.seconds() > 3) {
-                        drivetrain.autoMove(28, -83, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                        drivetrain.autoMove(25, -83, 270, 0.5, 0.5, 2, odometryPose, telemetry);
                         if (drivetrain.hasReached()) {
                             main_id += 1;
                             timer.reset();
@@ -199,7 +203,7 @@ public class FarBlueAuto extends LoggingOpMode{
                     }
                     break;
                 case 8:
-                    drivetrain.autoMove(46, -89, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(46, -83, 270, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached() || timer.seconds() > 2.2) {
                         main_id += 1;
                         pixel_dropper.setPosition(0.03);
@@ -210,13 +214,14 @@ public class FarBlueAuto extends LoggingOpMode{
         if (result.equals("right")) {
             switch (main_id) {
                 case 0:
-                    drivetrain.autoMove(21.5, 12, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(21.5, 13, 0, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
+                        arm.setPosition(0);
                     }
                     break;
                 case 1:
-                    drivetrain.autoMove(20, 12, 0, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(20, 13, 0, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                         timer.reset();
@@ -226,7 +231,7 @@ public class FarBlueAuto extends LoggingOpMode{
                 case 2:
                     if (timer.seconds() > 2) {
                         drivetrain.autoMove(19, 24.5, 0, 0.5, 0.5, 2, odometryPose, telemetry);
-                        if (drivetrain.hasReached()) {
+                        if (drivetrain.hasReached() || timer.seconds() > 3) {
                             main_id += 1;
                             timer.reset();
                         }
@@ -251,7 +256,7 @@ public class FarBlueAuto extends LoggingOpMode{
                     }
                     break;
                 case 6:
-                    drivetrain.autoMove(33, -88.9, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(31, -88.9, 270, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
                         pixel_dropper.setPosition(0.67);
@@ -260,7 +265,7 @@ public class FarBlueAuto extends LoggingOpMode{
                     break;
                 case 7:
                     if (timer.seconds() > 3) {
-                        drivetrain.autoMove(33, -83, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                        drivetrain.autoMove(31, -83, 270, 0.5, 0.5, 2, odometryPose, telemetry);
                         if (drivetrain.hasReached()) {
                             main_id += 1;
                             timer.reset();
@@ -268,7 +273,7 @@ public class FarBlueAuto extends LoggingOpMode{
                     }
                     break;
                 case 8:
-                    drivetrain.autoMove(46, -89, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(46, -83, 270, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached() || timer.seconds() > 2.2) {
                         main_id += 1;
                         pixel_dropper.setPosition(0.03);
@@ -282,6 +287,7 @@ public class FarBlueAuto extends LoggingOpMode{
                     drivetrain.autoMove(28.25, 5.387, 0, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached()) {
                         main_id += 1;
+                        arm.setPosition(0);
                     }
                     break;
                 case 1:
@@ -303,12 +309,13 @@ public class FarBlueAuto extends LoggingOpMode{
                         drivetrain.autoMove(26, 10, 270, 0.5, 0.5, 2, odometryPose, telemetry);
                         if (drivetrain.hasReached()) {
                             main_id += 1;
+                            timer.reset();
                         }
                     }
                     break;
                 case 4:
                     drivetrain.autoMove(46, 10, 270, 0.5, 0.5, 2, odometryPose, telemetry);
-                    if (drivetrain.hasReached()) {
+                    if (drivetrain.hasReached() || timer.seconds() > 1.8) {
                         main_id += 1;
                     }
                     break;
@@ -320,7 +327,7 @@ public class FarBlueAuto extends LoggingOpMode{
                     }
                     break;
                 case 6:
-                    drivetrain.autoMove(24.55, -88.9, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(22, -88.9, 270, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached() || timer.seconds() > 2.2) {
                         main_id += 1;
                         pixel_dropper.setPosition(0.67);
@@ -329,7 +336,7 @@ public class FarBlueAuto extends LoggingOpMode{
                     break;
                 case 7:
                     if (timer.seconds() > 3) {
-                        drivetrain.autoMove(24.55, -83, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                        drivetrain.autoMove(22, -83, 270, 0.5, 0.5, 2, odometryPose, telemetry);
                         if (drivetrain.hasReached()) {
                             main_id += 1;
                             timer.reset();
@@ -337,7 +344,7 @@ public class FarBlueAuto extends LoggingOpMode{
                     }
                     break;
                 case 8:
-                    drivetrain.autoMove(46, -89, 270, 0.5, 0.5, 2, odometryPose, telemetry);
+                    drivetrain.autoMove(46, -83, 270, 0.5, 0.5, 2, odometryPose, telemetry);
                     if (drivetrain.hasReached() || timer.seconds() > 2.2) {
                         main_id += 1;
                         pixel_dropper.setPosition(0.03);
@@ -354,6 +361,7 @@ public class FarBlueAuto extends LoggingOpMode{
 //            lift.setPower(0);
 //        }
 
+        arm.update();
         drivetrain.update(odometryPose, telemetry,false, main_id, false, false,0);
 
 //        telemetry.addData("Lift Position", lift.getLiftPosition());
