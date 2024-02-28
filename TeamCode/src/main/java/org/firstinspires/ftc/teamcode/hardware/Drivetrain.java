@@ -33,18 +33,21 @@ public class Drivetrain {
     private final BNO055IMU imu;
     private boolean has_reached;
 
-    public static double forward_kp = 0.077;
-    public static double forward_ki = 0.05;
-    public static double forward_kd = 0.011;
+    public static double forward_kp = 0.3;
+    public static double forward_ki = 0.025;
+    public static double forward_kd = 0.01;
     public static double forward_a = 0.8;
-    public static double strafe_kp = 0.08; //71
-    public static double strafe_ki = 0.055; //3
-    public static double strafe_kd = 0.009;
+    public static double forward_kf = 0;
+    public static double strafe_kp = 0.3; //71
+    public static double strafe_ki = 0.025; //3
+    public static double strafe_kd = 0.01;
     public static double strafe_a = 0.8;
-    public static double turn_kp = 0.0075;
-    public static double turn_ki = 0.125;
-    public static double turn_kd = 0.0028;
+    public static double strafe_kf = 0;
+    public static double turn_kp = 0.03;
+    public static double turn_ki = 0.06;
+    public static double turn_kd = 0.003;
     public static double turn_a = 0.8;
+    public static double turn_kf = 0;
     public static double turn_max_i_sum = 1;
     public static double turn_clip = 1;
 
@@ -52,9 +55,9 @@ public class Drivetrain {
     public static double cs_turn_ki = 0.09;
     public static double cs_strafe_kp = 0.063;
 
-    private final PID forward_pid = new PID(forward_kp,forward_ki,forward_kd,0.25,1,forward_a);
-    private final PID strafe_pid = new PID(strafe_kp,strafe_ki,strafe_kd,0.3,1,strafe_a);
-    private final PID turn_pid = new PID(turn_kp,turn_ki,turn_kd,0.23,turn_max_i_sum,turn_a);
+    private final PID forward_pid = new PID(forward_kp,forward_ki,forward_kd,forward_kf,1,forward_a);
+    private final PID strafe_pid = new PID(strafe_kp,strafe_ki,strafe_kd,strafe_kf,1,strafe_a);
+    private final PID turn_pid = new PID(turn_kp,turn_ki,turn_kd,turn_kf,turn_max_i_sum,turn_a);
 
     public static double rise_slope = 0.1;
     public static double fall_slope = 0.00000000000000000000001;
@@ -265,8 +268,8 @@ public class Drivetrain {
             feed_forward = 0;
         }
 
-        forward_power = Range.clip(-forward_pid.getOutPut(forward,y,feed_forward),-0.5,0.5);
-        strafe_power = Range.clip(-strafe_pid.getOutPut(strafe,x,feed_forward),-0.5,0.5);
+        forward_power = -Range.clip(-forward_pid.getOutPut(forward,y,feed_forward),-0.5,0.5);
+        strafe_power = -Range.clip(-strafe_pid.getOutPut(strafe,x,feed_forward),-0.5,0.5);
         if (rot == -777) {
             turn_power = 0;
         }

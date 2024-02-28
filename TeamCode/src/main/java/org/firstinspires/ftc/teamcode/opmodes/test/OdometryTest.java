@@ -23,15 +23,15 @@ import org.firstinspires.ftc.teamcode.opmodes.LoggingOpMode;
 @Autonomous(name="Odometry Test")
 public class OdometryTest extends LoggingOpMode {
 
-    public static double TRACKWIDTH = 12.5;
-    public final double CENTER_WHEEL_OFFSET = 1.5;
+    public static double TRACKWIDTH = 15.5;
+    public final double CENTER_WHEEL_OFFSET = 0.5;
     public final double WHEEL_DIAMETER = 1.88976;
     public final double TICKS_PER_REV = 2000;
     public final double DISTANCE_PER_PULSE = Math.PI * WHEEL_DIAMETER / TICKS_PER_REV;
 
     private int main_id = 0;
 
-    private MotorEx frontLeft, frontRight, backLeft, backRight, hanger_right;
+    private MotorEx frontLeft, frontRight, backLeft, backRight, lift_left;
     private DcMotorEx front_left, front_right, back_left, back_right;
     private Encoder leftOdometer, rightOdometer, centerOdometer;
     private HolonomicIMUOdometry odometry;
@@ -76,20 +76,18 @@ public class OdometryTest extends LoggingOpMode {
         frontRight = new MotorEx(hardwareMap, "front right");
         backLeft = new MotorEx(hardwareMap, "back left");
         backRight = new MotorEx(hardwareMap, "back right");
-        hanger_right = new MotorEx(hardwareMap, "hanger right");
+        lift_left = new MotorEx(hardwareMap, "lift left");
 
         front_left = frontLeft.motorEx;
         front_right = frontRight.motorEx;
         back_left = backLeft.motorEx;
         back_right = backRight.motorEx;
 
-        leftOdometer = backRight.encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
-        rightOdometer = frontRight.encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
-        centerOdometer = backLeft.encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
+        leftOdometer = frontLeft.encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
+        rightOdometer = backRight.encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
+        centerOdometer = frontRight.encoder.setDistancePerPulse(DISTANCE_PER_PULSE);
 
         leftOdometer.setDirection(MotorEx.Direction.REVERSE);
-        rightOdometer.setDirection(MotorEx.Direction.REVERSE);
-        centerOdometer.setDirection(MotorEx.Direction.REVERSE);
 
         odometry = new HolonomicIMUOdometry(
                 leftOdometer::getDistance,
@@ -190,6 +188,7 @@ public class OdometryTest extends LoggingOpMode {
         telemetry.addData("X",odometry.getPose().getY());
         telemetry.addData("Y",odometry.getPose().getX());
         telemetry.addData("Rotation",odometry_rotation);
+        telemetry.addData("IMU POS",imu.getPosition());
         telemetry.addData("ID",main_id);
         telemetry.addData("Center",centerOdometer.getPosition());
         telemetry.addData("Left",leftOdometer.getPosition());

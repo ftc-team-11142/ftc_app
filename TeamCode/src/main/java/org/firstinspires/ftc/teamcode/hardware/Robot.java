@@ -55,21 +55,21 @@ public class Robot {
         MotorEx front_right = new MotorEx(hardwareMap, "front right");
         MotorEx back_left = new MotorEx(hardwareMap, "back left");
         MotorEx back_right = new MotorEx(hardwareMap, "back right");
-        DcMotorEx hanger_left = hardwareMap.get(DcMotorEx.class, "hanger left");
-        DcMotorEx hanger_right = hardwareMap.get(DcMotorEx.class, "hanger right");
-        DcMotorEx lift = hardwareMap.get(DcMotorEx.class, "lift");
-
-        // Servos
+//        DcMotorEx hanger_left = hardwareMap.get(DcMotorEx.class, "hanger left");
+////        DcMotorEx hanger_right = hardwareMap.get(DcMotorEx.class, "hanger right");
+        MotorEx lift_left = new MotorEx(hardwareMap, "lift left");
+//
+//        // Servos
+////        Servo drone_launcher = hardwareMap.get(Servo.class, "drone launcher");
+//        Servo arm_left = hardwareMap.get(Servo.class, "arm left");
+//        Servo arm_right = hardwareMap.get(Servo.class, "arm right");
+//        Servo claw_right = hardwareMap.get(Servo.class, "claw right");
+//        Servo claw_left = hardwareMap.get(Servo.class, "claw left");
+//        Servo claw_wrist = hardwareMap.get(Servo.class, "claw wrist");
 //        Servo drone_launcher = hardwareMap.get(Servo.class, "drone launcher");
-        Servo arm_left = hardwareMap.get(Servo.class, "arm left");
-        Servo arm_right = hardwareMap.get(Servo.class, "arm right");
-        Servo claw_right = hardwareMap.get(Servo.class, "claw right");
-        Servo claw_left = hardwareMap.get(Servo.class, "claw left");
-        Servo claw_wrist = hardwareMap.get(Servo.class, "claw wrist");
-        Servo drone_launcher = hardwareMap.get(Servo.class, "drone launcher");
-//
-//
-//        // Sensors
+////
+////
+////        // Sensors
         BNO055IMU imu_sensor = hardwareMap.get(BNO055IMU.class, "imu");
 //        DistanceSensor claw_sensor_left = hardwareMap.get(DistanceSensor.class, "claw sensor left");
 //        DistanceSensor claw_sensor_right = hardwareMap.get(DistanceSensor.class, "claw sensor right");
@@ -77,12 +77,12 @@ public class Robot {
 
         // Sub-Assemblies
         this.drivetrain = new Drivetrain(front_left.motorEx, front_right.motorEx, back_left.motorEx, back_right.motorEx, imu_sensor);
-        this.intake = new Intake(claw_left,claw_right, claw_wrist /*, claw_sensor_left, claw_sensor_right*/);
-        this.lift = new Lift(lift);
-        this.hanger = new Hanger(hanger_left, hanger_right);
-        this.arm = new Arm(arm_left,arm_right);
-        this.drone = new Drone(drone_launcher);
-        this.odometry = new Odometry(front_right, back_right, front_left,back_left);
+//        this.intake = new Intake(claw_left,claw_right, claw_wrist /*, claw_sensor_left, claw_sensor_right*/);
+//        this.lift = new Lift(lift);
+//        this.hanger = new Hanger(hanger_left, hanger_right);
+//        this.arm = new Arm(arm_left,arm_right);
+//        this.drone = new Drone(drone_launcher);
+        this.odometry = new Odometry(front_right, back_right, front_left ,back_left, lift_left);
         this.hardwareMap = hardwareMap;
     }
 }

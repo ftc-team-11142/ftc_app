@@ -38,6 +38,10 @@ public class VisionTest extends LoggingOpMode {
 
     private AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
+    private boolean one_tag = false;
+    private boolean two_tag = false;
+    private boolean three_tag = false;
+
     @Override
     public void init() {
         super.init();
@@ -69,27 +73,54 @@ public class VisionTest extends LoggingOpMode {
     @Override
     public void init_loop() {
         super.init_loop();
-        ArrayList<org.firstinspires.ftc.vision.apriltag.AprilTagDetection> apriltag_detections;  // list of all detections
-        AprilTagDetection apriltag_detection;         // current detection in for() loop
         double x = 0;
         double y = 0;
         double z = 0;
 
         currentDetections = aprilTagDetectionPipeline.getLatestDetections();
+
         if(currentDetections.size() != 0) {
+            for (AprilTagDetection tag : currentDetections){
+                if (tag.id == 1) {
+                    one_tag = true;
+                    break;
+                }
+                else {
+                    one_tag = false;
+                }
+            }
 
             for (AprilTagDetection tag : currentDetections){
-                if (tag.id == 2 || tag.id == 5) {
-                    telemetry.addData("x",tag.pose.x);
-                    telemetry.addData("y",tag.pose.y);
-                    telemetry.addData("z",tag.pose.z);
-                    telemetry.addData("R",tag.pose.R);
+                if (tag.id == 2) {
+                    two_tag = true;
+                    x = tag.pose.x;
+                    y = tag.pose.y;
+                    z = tag.pose.z;
+                    break;
                 }
+                else {
+                    two_tag = false;
+                }
+            }
 
-
+            for (AprilTagDetection tag : currentDetections){
+                if (tag.id == 3) {
+                    three_tag = true;
+                    break;
+                }
+                else {
+                    three_tag = false;
+                }
             }
         }
 
+
+        telemetry.addData("One",one_tag);
+        telemetry.addData("Two",two_tag);
+        telemetry.addData("Three",three_tag);
+        telemetry.addData("x",x);
+        telemetry.addData("y",y);
+        telemetry.addData("z",z);
         telemetry.update();
 
     }

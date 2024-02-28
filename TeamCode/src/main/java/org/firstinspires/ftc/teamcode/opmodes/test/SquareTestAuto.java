@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes;
+package org.firstinspires.ftc.teamcode.opmodes.test;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.navigation.Odometry;
+import org.firstinspires.ftc.teamcode.opmodes.LoggingOpMode;
 import org.firstinspires.ftc.teamcode.util.Logger;
 import org.firstinspires.ftc.teamcode.util.LoopTimer;
 import org.firstinspires.ftc.teamcode.vision.ColorPipeline;
@@ -21,15 +22,14 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Config
-@Autonomous(name = "!! FAR Red Auto !!")
-public class FarRedAuto extends LoggingOpMode{
+@Autonomous(name = "Square Auto")
+public class SquareTestAuto extends LoggingOpMode {
     private Drivetrain drivetrain;
-    //    private Lift lift;
+//    private Lift lift;
     private Odometry odometry;
 //    private Arm arm;
 
     private boolean stop = false;
-    private boolean backdrop_clear = false;
 
     private String result = "Nothing";
 
@@ -46,12 +46,12 @@ public class FarRedAuto extends LoggingOpMode{
 
     private FtcDashboard dashboard;
 
-    private final Logger log = new Logger("Far Red Auto");
+    private final Logger log = new Logger("Square Auto");
 
-    public static int x1 = 375;
-    public static int y1 = 15;
-    public static int x2 = 5;
-    public static int y2 = 15;
+    public static int x1 = 430;
+    public static int y1 = 320;
+    public static int x2 = 20;
+    public static int y2 = 380;
 
     ElapsedTime timer = new ElapsedTime();
 
@@ -74,12 +74,13 @@ public class FarRedAuto extends LoggingOpMode{
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-        color_pipeline = new ColorPipeline(x1,y1,x2,y2,"far red");
+        color_pipeline = new ColorPipeline(270,240,630,240,"far red");
 
         camera.setPipeline(color_pipeline);
 
         pixel_dragger = hardwareMap.get(Servo.class, "pixel dragger");
         pixel_dropper = hardwareMap.get(Servo.class, "pixel dropper");
+
 
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
@@ -109,9 +110,7 @@ public class FarRedAuto extends LoggingOpMode{
         result = color_pipeline.getLocation();
 
         telemetry.addData("Result", result);
-//        telemetry.addData("color", color_pipeline.getColorValue());
-        telemetry.addData("color", color_pipeline.getColorHSVValue());
-        telemetry.addData("color 2", color_pipeline.getColorHSVValue2());
+        telemetry.addData("color", color_pipeline.getColorValue());
         telemetry.update();
     }
 
@@ -121,66 +120,56 @@ public class FarRedAuto extends LoggingOpMode{
 //        lift.resetEncoders();
         odometry.resetEncoders();
         drivetrain.resetEncoders();
-//        pixel_dragger.setPosition(0.508);
+        pixel_dragger.setPosition(0.508);
         camera.closeCameraDevice();
+        timer.reset();
     }
 
     @Override
     public void loop() {
-
 
         drivetrain.updateHeading();
 
         odometry.updatePose(-drivetrain.getHeading());
         Pose2d odometryPose = odometry.getPose();
 
-        if (result.equals("center")) {
-            switch (main_id) {
-                case 0:
-                    drivetrain.autoMove(14.43, 15.36, 0, 1, 1, 2, odometryPose, telemetry);
-                    if (drivetrain.hasReached()) {
-                        main_id += 1;
-                    }
-                    break;
-                case 1:
-                    drivetrain.autoMove(29.05, 5.46, 270, 1, 1, 2, odometryPose, telemetry);
-                    if (drivetrain.hasReached()) {
-                        main_id += 1;
-                    }
-                    break;
-            }
-        }
-        if (result.equals("right")) {
-            switch (main_id) {
-                case 0:
-                    drivetrain.autoMove(14.43, 15.36, 0, 1, 1, 2, odometryPose, telemetry);
-                    if (drivetrain.hasReached()) {
-                        main_id += 1;
-                    }
-                    break;
-                case 1:
-                    drivetrain.autoMove(15.19, 17.72, 270, 1, 1, 2, odometryPose, telemetry);
-                    if (drivetrain.hasReached()) {
-                        main_id += 1;
-                    }
-                    break;
-            }
-        }
-        if (result.equals("left")) {
-            switch (main_id) {
-                case 0:
-                    drivetrain.autoMove(14.43, 15.36, 0, 1, 1, 2, odometryPose, telemetry);
-                    if (drivetrain.hasReached()) {
-                        main_id += 1;
-                    }
-                    break;
-                case 1:
-                    drivetrain.autoMove(19.79, -3.12, 270, 1, 1, 2, odometryPose, telemetry);
-                    if (drivetrain.hasReached()) {
-                        main_id += 1;
-                    }
-                    break;
-            }
+        switch (main_id) {
+            case 0:
+                drivetrain.autoMove(15, 0, 0, 1, 1, 1, odometryPose, telemetry);
+                if (drivetrain.hasReached()) {
+                    main_id += 1;
+                }
+                break;
+            case 1:
+                drivetrain.autoMove(15, 15, 0, 1, 1, 1, odometryPose, telemetry);
+                if (drivetrain.hasReached()) {
+                    main_id += 1;
+                }
+                break;
+            case 2:
+                drivetrain.autoMove(0, 15, 0, 1, 1, 1, odometryPose, telemetry);
+                if (drivetrain.hasReached()) {
+                    main_id += 1;
+                }
+                break;
+            case 3:
+                drivetrain.autoMove(0, 0, 0, 1, 1, 1, odometryPose, telemetry);
+                if (drivetrain.hasReached()) {
+                    main_id = 0;
+                }
+                break;
+//            case 2:
+//                drivetrain.autoMove(0, 15, 90, 1, 1, 2, odometryPose, telemetry);
+//                if (drivetrain.hasReached()) {
+//                    main_id += 1;
+//                }
+//                break;
+//            case 3:
+//                drivetrain.autoMove(0, 15, 90, 1, 1, 2, odometryPose, telemetry);
+//                if (drivetrain.hasReached()) {
+//                    main_id += 1;
+//                }
+//                break;
         }
 
 //        lift_power = (lift_target - lift.getLiftPosition()) * 0.03;
@@ -190,7 +179,6 @@ public class FarRedAuto extends LoggingOpMode{
 //        else {
 //            lift.setPower(0);
 //        }
-
 //        arm.update();
         drivetrain.update(odometryPose, telemetry,false, main_id, false, false,0);
 
